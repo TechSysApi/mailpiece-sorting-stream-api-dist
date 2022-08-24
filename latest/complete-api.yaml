@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Kay Herzam (Swiss Post)'
     email: kay.herzam@post.ch
-  version: 2.0.0-feature-rename.5
+  version: 1.0.0-feature-rename.6
 host: 'server:8080'
 basePath: mqtt
 paths:
