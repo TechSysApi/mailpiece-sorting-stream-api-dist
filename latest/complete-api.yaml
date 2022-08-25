@@ -3,9 +3,9 @@ info:
   title: 'mailpiece-sorting stream API'
   description: 'Interaction between Sorting System and the Sorting Devices - [CEN/TS 16238](https://sharepoint-my.sp.swisspost.com/sites/RPZrealisierung/Freigegebene%20Dokumente/20_GesamtRPZ/50_Informatik/15_AT-Gateway/02_Spezifikation%20AT-Gateway/Schnittstellen/CEN_TS/MC_RC/TS_16238_EN.pdf).'
   contact:
-    name: 'Kay Herzam (Swiss Post)'
-    email: kay.herzam@post.ch
-  version: 1.0.0-feature-rename.8
+    name: 'Swiss Post Sorting System Development'
+    email: sortdev@post.ch
+  version: 1.0.0-feature-rename.9
 host: 'server:8080'
 basePath: mqtt
 paths:
