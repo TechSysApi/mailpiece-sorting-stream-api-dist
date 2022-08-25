@@ -5,16 +5,16 @@ info:
   contact:
     name: 'Kay Herzam (Swiss Post)'
     email: kay.herzam@post.ch
-  version: 1.0.0-feature-rename.7
+  version: 1.0.0-feature-rename.8
 host: 'server:8080'
 basePath: mqtt
 paths:
-  '/{locationKey}/mailpiece-sorting/v5/machine/submit-mailpiece/{srcSystem}/{srcInstance}':
+  '/{locationKey}/mailpiece-sorting/v1/device/submit-mailpiece/{srcSystem}/{srcInstance}':
     post:
       summary: 'ATG-3 Submit Mailpiece (Sensordaten empfangen)'
       description: 'The Machine submits the recognized mailpiece attributes.'
       tags:
-        - machine
+        - device
       parameters:
         -
           name: locationKey
@@ -36,12 +36,12 @@ paths:
       responses:
         default:
           schema: {$ref: 'SubmitMailpiece'}
-  '/{locationKey}/mailpiece-sorting/v5/machine/request-mailpiece-attributes/{srcSystem}/{srcInstance}/':
+  '/{locationKey}/mailpiece-sorting/v1/device/request-mailpiece-attributes/{srcSystem}/{srcInstance}/':
     post:
       summary: 'ATG-4 Request Mailpiece Attributes (Sortierziel berechnen)'
       description: 'Request for the coding result (outlet group)'
       tags:
-        - machine
+        - device
       parameters:
         -
           name: srcSystem
@@ -58,12 +58,12 @@ paths:
       responses:
         default:
           schema: {$ref: 'RequestMailpieceAttributes'}
-  '/{locationKey}/mailpiece-sorting/v5/machine/update-mailpiece-attributes/{srcSystem}/{srcInstance}':
+  '/{locationKey}/mailpiece-sorting/v1/device/update-mailpiece-attributes/{srcSystem}/{srcInstance}':
     post:
       summary: 'ATG-5 Update Mailpiece Attributes (Sortierergebnis empfangen)'
       description: 'The Machine reports new or changed attributes in order to update the mailpiece attribute database on the Coding System (e.g. indicating the sort bin). (Re-)Connected to ATG - The publisher needs to buffer all unsent messages for at least 1 day until the message is sent successfully to the ATG.'
       tags:
-        - machine
+        - device
       parameters:
         -
           name: srcSystem
@@ -80,12 +80,12 @@ paths:
       responses:
         default:
           schema: {$ref: 'UpdateMailpieceAttributes'}
-  '/{locationKey}/mailpiece-sorting/v5/coding/transmit-mailpiece-attributes/{srcSystem}/{srcInstance}/':
+  '/{locationKey}/mailpiece-sorting/v1/control/transmit-mailpiece-attributes/{srcSystem}/{srcInstance}/':
     post:
       summary: 'ATG-4 Transmit Mailpiece Attributes (Sortierziel berechnen)'
       description: 'The RC System returns mailpiece attributes to the Machine, either in response to a Submit Mailpiece or a Request Mailpiece Attributes. There may be multiple responses of Transmit Mailpiece Attributes for a single “Submit Mailpiece” message, e.g. partial OCR results followed with final VCS result.'
       tags:
-        - coding
+        - control
       parameters:
         -
           name: srcSystem
@@ -115,27 +115,6 @@ paths:
         default:
           schema: {$ref: 'TransmitMailpieceAttributes'}
 definitions:
-  Int:
-    type: integer
-    description: '<a href="https://swagger.io/docs/specification/data-models/data-types/#numbers">Number @asType integer</a>'
-  AddressResult:
-    type: object
-    properties:
-      outletGroup:
-        $ref: 'OutletGroup'
-        description: 'The outlet group containing the outlets.'
-      sortplanId:
-        type: string
-        description: 'The id of the sortplan used to calculate this result.'
-      rejectReasons:
-        type: array
-        items:
-          type: string
-        description: "This string element contains a reason why the RC System was unable to determine a result or has identified a special case.\nThe sorting machine needs to recognize the reject reason in order to sort the parcel to a special sortbin."
-    required:
-      - outletGroup
-      - sortplanId
-    additionalProperties: false
   BinOccupancyState:
     type: object
     properties:
@@ -160,6 +139,9 @@ definitions:
       - conveyingAidDetected
     additionalProperties: false
     description: "Doppelbelegung / Leerschalen-kontrolle\r\nemptyBinOccupied: Belegte Leerschale\r\nbinMultipleItemOccupied: Doppelbelegung - Erkennung der Schalenbelegung von DWS\r\nfrontOverlappingLimitExceeded: Überstand vorne zu groß\r\nbackOverlappingLimitExceeded: Überstand hinten zu groß\r\nmultipleItemsDetected: >= 2 Objekt erkannt\r\nconveyingAidDetected: Förderhilfe erkannt"
+  Int:
+    type: integer
+    description: '<a href="https://swagger.io/docs/specification/data-models/data-types/#numbers">Number @asType integer</a>'
   ContainerPosition:
     type: object
     properties:
@@ -310,17 +292,6 @@ definitions:
         $ref: 'LegalForTradeState'
     additionalProperties: false
     description: 'Customs information'
-  Location:
-    type: object
-    properties:
-      face:
-        $ref: 'MailpieceFace'
-        description: "Zur Erkennung auf welcher Seite (welche Kamera) der Identcode gelesen wurde (z.B. für VCS…).\r\nDer Wert ist nur auf den Identcode (national) bezogen."
-      polygon:
-        $ref: 'Polygon'
-        description: "Achtung: Die Punkte in Förderrichtung durchnummeriert, im Unterschied zum CEN-Standard, wo sie im (Gegen-)Uhrzeigersinn ausgerichtet sind.\r\nDie Punkte werden wie folgt ermittelt/ausgegeben:\r\nerster Punkt in Förderrichtung ist der Startpunkt gezählt wird fortlaufend in Förderichtung (nicht Uhrzeigersinn)\r\nalle Angaben sind bezogen auf den Triggernullpunkt (= Schalenanfang) 'x' wird in Förderrichtung ermittelt; 'y' quer zur Förderrichtung"
-    additionalProperties: false
-    description: "To specify a region location, the region descriptor LocationT listed subsequently is used. LocationT encloses\r\nno information about the image orientation. The image orientation is specified in the TIFF header. Region\r\ncoordinates are given in pixel and are related to the image origin which corresponds to the upper left corner.\r\nThe coordinates are independent of the TIFF orientation."
   MailpieceAttributes:
     type: object
     properties:
@@ -334,19 +305,6 @@ definitions:
       - type
     additionalProperties: false
     description: "This type is taken from CEN/TS 15448 and extended by a \"preknowledge\" element.\r\nThe type MailpieceAttrT specifies basic mailpiece attributes."
-  MailpieceFace:
-    type: string
-    enum:
-      - TOP
-      - LEFT
-      - RIGHT
-      - FRONT
-      - REAR
-      - BOTTOM
-      - FRONT_LEFT
-      - FRONT_RIGHT
-      - REAR_LEFT
-      - REAR_RIGHT
   MailpieceType:
     type: string
     enum:
@@ -392,27 +350,6 @@ definitions:
       - distributionStrategy
     additionalProperties: false
     description: 'Groupings of physical outlets for each sequencing pass'
-  PolygonDot:
-    type: object
-    properties:
-      x:
-        type: number
-      y:
-        type: number
-    required:
-      - x
-      - y
-    additionalProperties: false
-  Polygon:
-    type: object
-    properties:
-      dot:
-        type: array
-        items:
-          $ref: 'PolygonDot'
-    required:
-      - dot
-    additionalProperties: false
   RecognitionResult:
     type: object
     properties:
@@ -421,8 +358,6 @@ definitions:
         items:
           $ref: 'InformationCarrier'
         description: "Contains the data from the information carrier identified by the reading system.\r\nThe reading system should read and send all available barcodes/matrix codes. The consuming systems will apply further classification and filtering."
-      location:
-        $ref: 'Location'
       dimension:
         $ref: 'Dimension'
         description: 'dimension of the mail piece.'
@@ -511,7 +446,7 @@ definitions:
       - DIMENSION_ERROR
       - WEIGHT_ERROR
       - DIRECT_SORTING_MODE
-    description: "Defines the machine specific sort reasons.\nList of values:\n- OK: The item has been discharged accoding to the infromation received in the transmit-mailpiece-attributes message.\n- FALLBACK_OUTLET: Item has reached the max allowed amount of recirculations or end of line on a linear sorter.\n- ITEM_DISAPPEARED: The parcel was lost at unknown location.\n- DIMENSION_ERROR: Item oversize. The parcel was discharged, because of dimension exceed.\n- WEIGHT_ERROR: Item too heavy. The parcel was discharge, because of weight exceed.\n- DIRECT_SORTING_MODE: Item sorted by the direct sorting mode."
+    description: "Defines the machine specific sort reasons.\nList of values:\n- OK: The item has been discharged accoding to the infromation received in the transmit-mailpiece-attributes message.\n- FALLBACK_OUTLET: Item has reached the max allowed amount of recirculations or end of line on a linear sorter.\n- ITEM_DISAPPEARED: The item was lost at unknown location.\n- DIMENSION_ERROR: Item oversize. The item was discharged, because of dimension exceed.\n- WEIGHT_ERROR: The item was discharged because weight limit has been exceeded\n- DIRECT_SORTING_MODE: Item sorted by the direct sorting mode."
   SortingProcess:
     type: string
     enum:
@@ -595,13 +530,19 @@ definitions:
       timestamp:
         $ref: 'DateTime'
         description: 'Timestamp of data collection.'
-      addressResult:
-        $ref: 'AddressResult'
+      outletGroup:
+        $ref: 'OutletGroup'
+        description: 'The outlet group containing the outlets.'
+      sortplanId:
+        type: string
+        description: 'The id of the sortplan used to calculate this result.'
     required:
       - locationKey
       - sortingProcess
       - processingItemId
       - timestamp
+      - outletGroup
+      - sortplanId
     additionalProperties: false
     description: 'This type contains the result for a mail piece that has been determined by the RC System.'
   UpdateMailpieceAttributes:
