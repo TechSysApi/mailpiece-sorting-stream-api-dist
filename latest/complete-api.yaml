@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 1.0.0-feature-rename.9
+  version: 1.0.0-feature-rename.10
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -590,7 +590,7 @@ definitions:
       - finalSorted
       - sortReason
     additionalProperties: false
-    description: 'This message is sent when the sorter discharges the mailpiece. It provides additional information abouth why and where the item has been discharged.'
+    description: 'This message is sent when the sorter discharges the mailpiece or when the mailpiece disappeared. It provides additional information about why and where the item has been discharged.'
   WeightMeasurementState:
     type: object
     properties:
