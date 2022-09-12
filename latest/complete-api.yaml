@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 1.0.0
+  version: 1.0.1
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -329,7 +329,7 @@ definitions:
     properties:
       name:
         type: string
-        description: 'A unique key inside the sort plan to identify this occurrence of OutletGroup'
+        description: 'A unique key inside the sort plan to identify this occurrence of OutletGroup.'
         maxLength: 200
       specialType:
         $ref: 'OutletArea'
