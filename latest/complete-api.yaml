@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 1.0.1
+  version: 1.1.0-feat-distributionStrategyRefine.1
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -157,9 +157,9 @@ definitions:
         type: string
         description: "The outlet name, where this container position belongs to.\nThis is only needed, if this container position is related to an outlet.\ni.e. for bulk sorting, no outlet is available."
         maxLength: 200
-      outletPriority:
+      priority:
         $ref: 'Int'
-        description: "Priority of the Outlet.\nUse for some distibution strategies. This field is ignored when the chosen strategy does not need a priority (e.g. ROUNDROBIN).\n0 = Low priority"
+        description: "Priority of the Position.\nRequired for some distibution strategies. This field is ignored when the chosen strategy does not need a priority (e.g. UNIFORM).\n0 = Low priority"
         minimum: 0
     required:
       - name
@@ -213,11 +213,11 @@ definitions:
   DistributionStrategy:
     type: string
     enum:
-      - ROUNDROBIN
+      - UNIFORM
       - WATERFALL
-      - WATERFALL_AND_ROUNDROBIN
+      - WATERFALL_AND_UNIFORM
       - LEAST_COST
-    description: "Defines the distribution strategy to use when multiple container postitions exist for a given outlet group.\n- ROUNDROBIN: Use each position one after the other, so that each position receices the same amount of mailpieces.\n- WATERFALL: Use one position until its outlet is full then use the next (the order of the position is determined by the priority in the position).\n- WATERFALL_AND_ROUNDROBIN: The same as WATERFALL but if there are multiple position that have the same priority use ROUNDROBIN between them.\n- LEAST_COST: Use the position that has the least cost associated (eg. is closes or can be accessed the quickest)\n\nNote that not all sorters support every strategy."
+    description: "Defines the distribution strategy to use when multiple container postitions exist for a given outlet group.\n- UNIFORM: distribute mailpieces equally among the positions\n- WATERFALL: Use one position until its outlet is full then use the next (the order of the position is determined by the priority in the position).\n- WATERFALL_AND_UNIFORM: The same as WATERFALL but if there are multiple position that have the same priority use UNIFORM between them.\n- LEAST_COST: Use the position that has the least cost associated (eg. is closes or can be accessed the quickest)\n\nNote1: that not all sorters support every strategy.\nNote2: sorters usually don't have knowledge about positions, yet the distribution strategy needs to be evaluated per position (e.g. UNIFORM)"
   InformationCarrier:
     type: object
     properties:
@@ -315,15 +315,6 @@ definitions:
       - FLAT_BUNDLE
       - PARCEL
     description: "Defines the mailpiece type.\r\nUNKNOWN Unknown mailpiece type for the sorter\r\nLETTER Mail item (Brief)\r\nLETTER_BUNDLE Not supported\r\nFLAT Big letters mostly from China (Kleinware)\r\nFLAT_BUNDLE Bundle of mail items (Bund)\r\nPARCEL Parcel item (Paket)"
-  OutletArea:
-    type: string
-    enum:
-      - STANDARD_AREA
-      - SEQUENCED_AREA
-      - REJECT_AREA
-      - SEQUENCED_OVERFLOW_AREA
-      - MANUAL_CODING_STATION_AREA
-    description: "Defines the outlet area. SEQ_AREA and SEQ_OV_AREA are not used for parcel sorting.\n- STANDARD_AREA (STD_AREA): Area used for non-sequenced mail piece;\n- SEQUENCED_AREA(SEQ_AREA): Area used for sequenced mail piece;\n- REJECT_AREA: Area for SpecialSort: application specific (ZDS.SpecialVZ) or machine specific (ASL) destinations.\n- SEQUENCED_OVERFLOW_AREA(SEQ_OV_AREA): Area for overflow stackers, typically used in the 1st pass when the mail volume is not yet precisely known. This area consists of all the remaining stackers.\n- MANUAL_CODING_STATION_AREA (MCS_AREA): Area for manual coding systems"
   OutletGroup:
     type: object
     properties:
@@ -331,9 +322,6 @@ definitions:
         type: string
         description: 'A unique key inside the sort plan to identify this occurrence of OutletGroup.'
         maxLength: 200
-      specialType:
-        $ref: 'OutletArea'
-        description: 'Defines the usage made of the outlet group.'
       containerPositions:
         type: array
         items:
@@ -345,7 +333,6 @@ definitions:
         description: 'Defines the distribution strategy to use when multiple container postitions exist for a given outlet group.'
     required:
       - name
-      - specialType
       - containerPositions
       - distributionStrategy
     additionalProperties: false
