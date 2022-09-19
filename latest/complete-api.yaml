@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 1.1.0-feat-distributionStrategyRefine.1
+  version: 1.1.0-feat-distributionStrategyRefine.2
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -217,7 +217,7 @@ definitions:
       - WATERFALL
       - WATERFALL_AND_UNIFORM
       - LEAST_COST
-    description: "Defines the distribution strategy to use when multiple container postitions exist for a given outlet group.\n- UNIFORM: distribute mailpieces equally among the positions\n- WATERFALL: Use one position until its outlet is full then use the next (the order of the position is determined by the priority in the position).\n- WATERFALL_AND_UNIFORM: The same as WATERFALL but if there are multiple position that have the same priority use UNIFORM between them.\n- LEAST_COST: Use the position that has the least cost associated (eg. is closes or can be accessed the quickest)\n\nNote1: that not all sorters support every strategy.\nNote2: sorters usually don't have knowledge about positions, yet the distribution strategy needs to be evaluated per position (e.g. UNIFORM)"
+    description: "Defines the distribution strategy to use when multiple container postitions exist for a given outlet group.\n- UNIFORM: distribute mailpieces equally among the positions\n- WATERFALL: Use one position until its outlet is full then use the next (the order of the position is determined by the priority in the position).\n- WATERFALL_AND_UNIFORM: The same as WATERFALL but if there are multiple position that have the same priority use UNIFORM between them.\n- LEAST_COST: Use the position that has the least cost associated (eg. is closes or can be accessed the quickest)\n\nNote1: not all sorters support every strategy\nNote2: sorters usually don't have knowledge about positions, yet the distribution strategy needs to be evaluated per position (e.g. UNIFORM)"
   InformationCarrier:
     type: object
     properties:
