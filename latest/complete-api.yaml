@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 1.0.1
+  version: 1.1.0
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -138,7 +138,7 @@ definitions:
       - multipleItemsDetected
       - conveyingAidDetected
     additionalProperties: false
-    description: "Doppelbelegung / Leerschalen-kontrolle\r\nemptyBinOccupied: Belegte Leerschale\r\nbinMultipleItemOccupied: Doppelbelegung - Erkennung der Schalenbelegung von DWS\r\nfrontOverlappingLimitExceeded: Überstand vorne zu groß\r\nbackOverlappingLimitExceeded: Überstand hinten zu groß\r\nmultipleItemsDetected: >= 2 Objekt erkannt\r\nconveyingAidDetected: Förderhilfe erkannt"
+    description: "Doppelbelegung / Leerschalen-kontrolle\nemptyBinOccupied: Belegte Leerschale\nbinMultipleItemOccupied: Doppelbelegung - Erkennung der Schalenbelegung von DWS\nfrontOverlappingLimitExceeded: Überstand vorne zu groß\nbackOverlappingLimitExceeded: Überstand hinten zu groß\nmultipleItemsDetected: >= 2 Objekt erkannt\nconveyingAidDetected: Förderhilfe erkannt"
   Int:
     type: integer
     description: '<a href="https://swagger.io/docs/specification/data-models/data-types/#numbers">Number @asType integer</a>'
@@ -157,9 +157,9 @@ definitions:
         type: string
         description: "The outlet name, where this container position belongs to.\nThis is only needed, if this container position is related to an outlet.\ni.e. for bulk sorting, no outlet is available."
         maxLength: 200
-      outletPriority:
+      priority:
         $ref: 'Int'
-        description: "Priority of the Outlet.\nUse for some distibution strategies. This field is ignored when the chosen strategy does not need a priority (e.g. ROUNDROBIN).\n0 = Low priority"
+        description: "Priority of the Position.\nRequired for some distibution strategies. This field is ignored when the chosen strategy does not need a priority (e.g. UNIFORM).\n0 = Low priority"
         minimum: 0
     required:
       - name
@@ -171,14 +171,14 @@ definitions:
     enum:
       - INSIDE
       - OUTSIDE
-    description: "- INSIDE: Object is within the measurement range\r\n- OUTSIDE: Object is outside of the measurement range"
+    description: "- INSIDE: Object is within the measurement range\n- OUTSIDE: Object is outside of the measurement range"
   DimensionMeasurementResultType:
     type: string
     enum:
       - OK
       - NOK
       - NOT_RECOGNIZED
-    description: "Measurement result state.\r\n\r\n- OK: Measurement VMS ok\r\n- NOK: Measurement VMS not ok\r\n- NOT_RECOGNIZED: No object recognized"
+    description: "Measurement result state.\n\n- OK: Measurement VMS ok\n- NOK: Measurement VMS not ok\n- NOT_RECOGNIZED: No object recognized"
   DimensionMeasurementState:
     type: object
     properties:
@@ -213,11 +213,11 @@ definitions:
   DistributionStrategy:
     type: string
     enum:
-      - ROUNDROBIN
+      - UNIFORM
       - WATERFALL
-      - WATERFALL_AND_ROUNDROBIN
+      - WATERFALL_AND_UNIFORM
       - LEAST_COST
-    description: "Defines the distribution strategy to use when multiple container postitions exist for a given outlet group.\n- ROUNDROBIN: Use each position one after the other, so that each position receices the same amount of mailpieces.\n- WATERFALL: Use one position until its outlet is full then use the next (the order of the position is determined by the priority in the position).\n- WATERFALL_AND_ROUNDROBIN: The same as WATERFALL but if there are multiple position that have the same priority use ROUNDROBIN between them.\n- LEAST_COST: Use the position that has the least cost associated (eg. is closes or can be accessed the quickest)\n\nNote that not all sorters support every strategy."
+    description: "Defines the distribution strategy to use when multiple container postitions exist for a given outlet group.\n- UNIFORM: distribute mailpieces equally among the positions\n- WATERFALL: Use one position until its outlet is full then use the next (the order of the position is determined by the priority in the position).\n- WATERFALL_AND_UNIFORM: The same as WATERFALL but if there are multiple position that have the same priority use UNIFORM between them.\n- LEAST_COST: Use the position that has the least cost associated (eg. is closes or can be accessed the quickest)\n\nNote1: not all sorters support every strategy\nNote2: sorters usually don't have knowledge about positions, yet the distribution strategy needs to be evaluated per position (e.g. UNIFORM)"
   InformationCarrier:
     type: object
     properties:
@@ -237,7 +237,7 @@ definitions:
     properties:
       ok:
         type: boolean
-        description: "True: object size ok\r\nFalse: Object size not ok (over and/or undersized, see corresponding flags)"
+        description: "True: object size ok\nFalse: Object size not ok (over and/or undersized, see corresponding flags)"
       oversized:
         type: boolean
         description: 'object too big to be measured'
@@ -270,17 +270,17 @@ definitions:
       - dimensionError
       - weightError
     additionalProperties: false
-    description: "Detailed information on legal for trade relevant measurements.\r\n\r\n- If all flags are false, the measurements are legal for trade.\r\n- If only weightError is true, dimension measurement is legal for trade.\r\n- If only dimensionError is true, weight measurement is legal for trade.\r\n- Otherwise, measurements are not legal for trade."
+    description: "Detailed information on legal for trade relevant measurements.\n\n- If all flags are false, the measurements are legal for trade.\n- If only weightError is true, dimension measurement is legal for trade.\n- If only dimensionError is true, weight measurement is legal for trade.\n- Otherwise, measurements are not legal for trade."
   LegalForTrade:
     type: object
     properties:
       actualVolume:
         type: integer
-        description: "# GER-TODO\r\n\r\nRealvolumen VMS#1 wenn VMS#1 = VMS420/520 Realvolumen = 000000 bei VMS#1 = VMS410/510\r\n[dm3]"
+        description: "# GER-TODO\n\nRealvolumen VMS#1 wenn VMS#1 = VMS420/520 Realvolumen = 000000 bei VMS#1 = VMS410/510\n[dm3]"
         maxLength: 5
       boxVolume:
         type: integer
-        description: "Boxvolumen = Länge x Breite x Höhe\r\n[dm3]"
+        description: "Boxvolumen = Länge x Breite x Höhe\n[dm3]"
         maxLength: 5
       volumeRatio:
         type: integer
@@ -300,11 +300,11 @@ definitions:
         description: 'Defines the type of the mail item.'
       preknowledge:
         $ref: 'RecognitionResult'
-        description: "Provides preknowledge to the RC System, e.g. a barcode\r\nresult if a barcode reader is integrated into the machine."
+        description: "Provides preknowledge to the RC System, e.g. a barcode\nresult if a barcode reader is integrated into the machine."
     required:
       - type
     additionalProperties: false
-    description: "This type is taken from CEN/TS 15448 and extended by a \"preknowledge\" element.\r\nThe type MailpieceAttrT specifies basic mailpiece attributes."
+    description: "This type is taken from CEN/TS 15448 and extended by a “preknowledge” element.\nThe type MailpieceAttrT specifies basic mailpiece attributes."
   MailpieceType:
     type: string
     enum:
@@ -315,15 +315,6 @@ definitions:
       - FLAT_BUNDLE
       - PARCEL
     description: "Defines the mailpiece type.\r\nUNKNOWN Unknown mailpiece type for the sorter\r\nLETTER Mail item (Brief)\r\nLETTER_BUNDLE Not supported\r\nFLAT Big letters mostly from China (Kleinware)\r\nFLAT_BUNDLE Bundle of mail items (Bund)\r\nPARCEL Parcel item (Paket)"
-  OutletArea:
-    type: string
-    enum:
-      - STANDARD_AREA
-      - SEQUENCED_AREA
-      - REJECT_AREA
-      - SEQUENCED_OVERFLOW_AREA
-      - MANUAL_CODING_STATION_AREA
-    description: "Defines the outlet area. SEQ_AREA and SEQ_OV_AREA are not used for parcel sorting.\n- STANDARD_AREA (STD_AREA): Area used for non-sequenced mail piece;\n- SEQUENCED_AREA(SEQ_AREA): Area used for sequenced mail piece;\n- REJECT_AREA: Area for SpecialSort: application specific (ZDS.SpecialVZ) or machine specific (ASL) destinations.\n- SEQUENCED_OVERFLOW_AREA(SEQ_OV_AREA): Area for overflow stackers, typically used in the 1st pass when the mail volume is not yet precisely known. This area consists of all the remaining stackers.\n- MANUAL_CODING_STATION_AREA (MCS_AREA): Area for manual coding systems"
   OutletGroup:
     type: object
     properties:
@@ -331,9 +322,6 @@ definitions:
         type: string
         description: 'A unique key inside the sort plan to identify this occurrence of OutletGroup.'
         maxLength: 200
-      specialType:
-        $ref: 'OutletArea'
-        description: 'Defines the usage made of the outlet group.'
       containerPositions:
         type: array
         items:
@@ -345,7 +333,6 @@ definitions:
         description: 'Defines the distribution strategy to use when multiple container postitions exist for a given outlet group.'
     required:
       - name
-      - specialType
       - containerPositions
       - distributionStrategy
     additionalProperties: false
@@ -357,7 +344,7 @@ definitions:
         type: array
         items:
           $ref: 'InformationCarrier'
-        description: "Contains the data from the information carrier identified by the reading system.\r\nThe reading system should read and send all available barcodes/matrix codes. The consuming systems will apply further classification and filtering."
+        description: "Contains the data from the information carrier identified by the reading system.\nThe reading system should read and send all available barcodes/matrix codes. The consuming systems will apply further classification and filtering."
       dimension:
         $ref: 'Dimension'
         description: 'dimension of the mail piece.'
@@ -455,7 +442,7 @@ definitions:
       - MANUAL_CODING_LIGHT
       - MANUAL_CODING_BULK
       - MANUAL_CODING_BULK_AUTOMATIC
-    description: "Defines the sorting process.\r\nAUTOMATIC Sorted by the sorter\r\nMANUAL_CODING_REJECT Device where a coder manually captures barcodes and enters address information\r\nMANUAL_CODING_LIGHT Device where barcodes barcodes, products and the weight is captured (manual or partially automated)\r\nMANUAL_CODING_BULK Device where barcodes, weight and dimensions and address information for bulky goods are captured or entered (manual or partially automated)\r\nMANUAL_CODING_BULK_AUTOMATIC Device where a coder manually captures barcodes and other specific information for bulky goods"
+    description: "Defines the sorting process.\nAUTOMATIC Sorted by the sorter\nMANUAL_CODING_REJECT Device where a coder manually captures barcodes and enters address information\nMANUAL_CODING_LIGHT Device where barcodes barcodes, products and the weight is captured (manual or partially automated)\nMANUAL_CODING_BULK Device where barcodes, weight and dimensions and address information for bulky goods are captured or entered (manual or partially automated)\nMANUAL_CODING_BULK_AUTOMATIC Device where a coder manually captures barcodes and other specific information for bulky goods"
   SubmitMailpiece:
     type: object
     properties:
@@ -480,7 +467,7 @@ definitions:
         pattern: '[A-Z]{3}[0-9]{2}'
       mailpieceAttributes:
         $ref: 'MailpieceAttributes'
-        description: "Provides basic mailpiece related information:\r\n\r\n- the kind of the mail item\r\n- the mailclass of the mail item; important for the ED because it and may affect the address recognition\r\n- the scanned faces of the mail item. The FaceSetT type is assigned to faces and allows providing a sequence of faces.\r\n   The FaceSetT types allows to link a face with the corresponding image by a page attribute.\r\n- a preknowledge result if a barcode reader or some other type of Enrichment Device is directly attached to the MC.\r\n   This result will be in accordance with the result type specified in the IC-ED interface."
+        description: "Provides basic mailpiece related information:\r\n\r\n- the kind of the mail item\r\n- a preknowledge result if a barcode reader or some other type of Enrichment Device is directly attached to the MC.\r\n   This result will be in accordance with the result type specified in the IC-ED interface."
     required:
       - locationKey
       - sortingProcess
