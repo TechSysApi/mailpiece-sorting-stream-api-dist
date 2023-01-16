@@ -5,11 +5,11 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 1.1.0
+  version: 1.2.0-feat-Constraints.2
 host: 'server:8080'
 basePath: mqtt
 paths:
-  '/{locationKey}/mailpiece-sorting/v1/device/submit-mailpiece/{srcSystem}/{srcInstance}':
+  '/{sortingUnitKey}/mailpiece-sorting/v1/device/submit-mailpiece/{srcSystem}/{srcInstance}':
     post:
       summary: 'ATG-3 Submit Mailpiece (Sensordaten empfangen)'
       description: 'The Machine submits the recognized mailpiece attributes.'
@@ -17,7 +17,7 @@ paths:
         - device
       parameters:
         -
-          name: locationKey
+          name: sortingUnitKey
           in: path
           description: 'unique identifier of the sorting center'
           type: string
@@ -36,7 +36,7 @@ paths:
       responses:
         default:
           schema: {$ref: 'SubmitMailpiece'}
-  '/{locationKey}/mailpiece-sorting/v1/device/request-mailpiece-attributes/{srcSystem}/{srcInstance}/':
+  '/{sortingUnitKey}/mailpiece-sorting/v1/device/request-mailpiece-attributes/{srcSystem}/{srcInstance}/':
     post:
       summary: 'ATG-4 Request Mailpiece Attributes (Sortierziel berechnen)'
       description: 'Request for the coding result (outlet group)'
@@ -58,7 +58,7 @@ paths:
       responses:
         default:
           schema: {$ref: 'RequestMailpieceAttributes'}
-  '/{locationKey}/mailpiece-sorting/v1/device/update-mailpiece-attributes/{srcSystem}/{srcInstance}':
+  '/{sortingUnitKey}/mailpiece-sorting/v1/device/update-mailpiece-attributes/{srcSystem}/{srcInstance}':
     post:
       summary: 'ATG-5 Update Mailpiece Attributes (Sortierergebnis empfangen)'
       description: 'The Machine reports new or changed attributes in order to update the mailpiece attribute database on the Coding System (e.g. indicating the sort bin). (Re-)Connected to ATG - The publisher needs to buffer all unsent messages for at least 1 day until the message is sent successfully to the ATG.'
@@ -80,7 +80,7 @@ paths:
       responses:
         default:
           schema: {$ref: 'UpdateMailpieceAttributes'}
-  '/{locationKey}/mailpiece-sorting/v1/control/transmit-mailpiece-attributes/{srcSystem}/{srcInstance}/':
+  '/{sortingUnitKey}/mailpiece-sorting/v1/control/transmit-mailpiece-attributes/{srcSystem}/{srcInstance}/':
     post:
       summary: 'ATG-4 Transmit Mailpiece Attributes (Sortierziel berechnen)'
       description: 'The RC System returns mailpiece attributes to the Machine, either in response to a Submit Mailpiece or a Request Mailpiece Attributes. There may be multiple responses of Transmit Mailpiece Attributes for a single “Submit Mailpiece” message, e.g. partial OCR results followed with final VCS result.'
@@ -200,12 +200,15 @@ definitions:
       length:
         type: integer
         description: 'Length in [mm].'
+        minimum: 0
       width:
         type: integer
         description: 'Width in [mm].'
+        minimum: 0
       height:
         type: integer
         description: 'Height in [mm].'
+        minimum: 0
       state:
         $ref: 'DimensionMeasurementState'
     additionalProperties: false
@@ -277,14 +280,17 @@ definitions:
       actualVolume:
         type: integer
         description: "# GER-TODO\n\nRealvolumen VMS#1 wenn VMS#1 = VMS420/520 Realvolumen = 000000 bei VMS#1 = VMS410/510\n[dm3]"
-        maxLength: 5
+        minimum: 0
+        maximum: 99999
       boxVolume:
         type: integer
         description: "Boxvolumen = Länge x Breite x Höhe\n[dm3]"
-        maxLength: 5
+        minimum: 0
+        maximum: 99999
       volumeRatio:
         type: integer
         description: 'Realvolumen / Boxvolumen in % ganzzahlig'
+        minimum: 0
       shape:
         $ref: 'ShapeType'
         description: 'Die Paketform.'
@@ -360,9 +366,9 @@ definitions:
   RequestMailpieceAttributes:
     type: object
     properties:
-      locationKey:
+      sortingUnitKey:
         type: string
-        description: 'Unique identifier of the sorting center.'
+        description: 'Unique identifier of the sorting unit at a specific location.'
         maxLength: 200
       sortingProcess:
         $ref: 'SortingProcess'
@@ -392,7 +398,7 @@ definitions:
         description: 'Refers to a module id as event-source.'
         pattern: '[A-Z]{3}[0-9]{2}'
     required:
-      - locationKey
+      - sortingUnitKey
       - sortingProcess
       - processingItemId
       - requestReasons
@@ -433,7 +439,7 @@ definitions:
       - DIMENSION_ERROR
       - WEIGHT_ERROR
       - DIRECT_SORTING_MODE
-    description: "Defines the machine specific sort reasons.\nList of values:\n- OK: The item has been discharged accoding to the infromation received in the transmit-mailpiece-attributes message.\n- FALLBACK_OUTLET: Item has reached the max allowed amount of recirculations or end of line on a linear sorter.\n- ITEM_DISAPPEARED: The item was lost at unknown location.\n- DIMENSION_ERROR: Item oversize. The item was discharged, because of dimension exceed.\n- WEIGHT_ERROR: The item was discharged because weight limit has been exceeded\n- DIRECT_SORTING_MODE: Item sorted by the direct sorting mode."
+    description: "Defines the machine specific sort reasons.\nList of values:\n- OK: The item has been discharged accoding to the infromation received in the transmit-mailpiece-attributes message.\n- FALLBACK_OUTLET: Item has reached the max allowed amount of recirculations or end of line on a linear sorter. Also applies for items with discharge error.\n- ITEM_DISAPPEARED: The item was lost at unknown location.\n- DIMENSION_ERROR: Item oversize. The item was discharged, because of dimension exceed.\n- WEIGHT_ERROR: The item was discharged because weight limit has been exceeded\n- DIRECT_SORTING_MODE: Item sorted by the direct sorting mode."
   SortingProcess:
     type: string
     enum:
@@ -442,13 +448,14 @@ definitions:
       - MANUAL_CODING_LIGHT
       - MANUAL_CODING_BULK
       - MANUAL_CODING_BULK_AUTOMATIC
-    description: "Defines the sorting process.\nAUTOMATIC Sorted by the sorter\nMANUAL_CODING_REJECT Device where a coder manually captures barcodes and enters address information\nMANUAL_CODING_LIGHT Device where barcodes barcodes, products and the weight is captured (manual or partially automated)\nMANUAL_CODING_BULK Device where barcodes, weight and dimensions and address information for bulky goods are captured or entered (manual or partially automated)\nMANUAL_CODING_BULK_AUTOMATIC Device where a coder manually captures barcodes and other specific information for bulky goods"
+      - MANUAL_PRESORTING
+    description: "Defines the sorting process.\nAUTOMATIC Sorted by the sorter\nMANUAL_CODING_REJECT Device where a coder manually captures barcodes and enters address information\nMANUAL_CODING_LIGHT Device where barcodes barcodes, products and the weight is captured (manual or partially automated)\nMANUAL_CODING_BULK Device where barcodes, weight and dimensions and address information for bulky goods are captured or entered (manual or partially automated)\nMANUAL_CODING_BULK_AUTOMATIC Device where a coder manually captures barcodes and other specific information for bulky goods\nMANUAL_PRESORTING Device where items are coded automatically and sorted manually to achieve a to achieve a pre-sortation"
   SubmitMailpiece:
     type: object
     properties:
-      locationKey:
+      sortingUnitKey:
         type: string
-        description: 'Unique identifier of the sorting center.'
+        description: 'Unique identifier of the sorting unit at a specific location.'
         maxLength: 200
       sortingProcess:
         $ref: 'SortingProcess'
@@ -469,7 +476,7 @@ definitions:
         $ref: 'MailpieceAttributes'
         description: "Provides basic mailpiece related information:\r\n\r\n- the kind of the mail item\r\n- a preknowledge result if a barcode reader or some other type of Enrichment Device is directly attached to the MC.\r\n   This result will be in accordance with the result type specified in the IC-ED interface."
     required:
-      - locationKey
+      - sortingUnitKey
       - sortingProcess
       - processingItemId
       - timestamp
@@ -503,9 +510,9 @@ definitions:
   TransmitMailpieceAttributes:
     type: object
     properties:
-      locationKey:
+      sortingUnitKey:
         type: string
-        description: 'Unique identifier of the sorting center.'
+        description: 'Unique identifier of the sorting unit at a specific location.'
         maxLength: 200
       sortingProcess:
         $ref: 'SortingProcess'
@@ -524,7 +531,7 @@ definitions:
         type: string
         description: 'The id of the sortplan used to calculate this result.'
     required:
-      - locationKey
+      - sortingUnitKey
       - sortingProcess
       - processingItemId
       - timestamp
@@ -535,9 +542,9 @@ definitions:
   UpdateMailpieceAttributes:
     type: object
     properties:
-      locationKey:
+      sortingUnitKey:
         type: string
-        description: 'Unique identifier of the sorting center.'
+        description: 'Unique identifier of the sorting unit at a specific location.'
         maxLength: 200
       sortingProcess:
         $ref: 'SortingProcess'
@@ -554,10 +561,6 @@ definitions:
         type: string
         description: 'Refers to a module id as event-source.'
         pattern: '[A-Z]{3}[0-9]{2}'
-      weight:
-        type: integer
-        description: 'Weight of the mail piece in [g].'
-        maxLength: 6
       outlet:
         type: string
         description: 'The outlet to which the machine physically sorted the mail piece.'
@@ -568,7 +571,7 @@ definitions:
         $ref: 'SortReason'
         description: 'The reason why the mailpiece has been discharged.'
     required:
-      - locationKey
+      - sortingUnitKey
       - sortingProcess
       - processingItemId
       - timestamp
@@ -619,7 +622,8 @@ definitions:
       value:
         type: integer
         description: 'Actual weight in [g].'
-        maxLength: 6
+        minimum: 0
+        maximum: 999999
       scaleId:
         type: string
         description: 'The id of the scale (e.g. HAE-024)'
