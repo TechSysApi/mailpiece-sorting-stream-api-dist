@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 1.3.0
+  version: 1.4.0-feature-PZS-8340-api-fur-sperrgut-leitetikette-erstellen.7
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -221,6 +221,17 @@ definitions:
       - WATERFALL_AND_UNIFORM
       - LEAST_COST
     description: "Defines the distribution strategy to use when multiple container postitions exist for a given outlet group.\n- UNIFORM: distribute mailpieces equally among the positions\n- WATERFALL: Use one position until its outlet is full then use the next (the order of the position is determined by the priority in the position).\n- WATERFALL_AND_UNIFORM: The same as WATERFALL but if there are multiple position that have the same priority use UNIFORM between them.\n- LEAST_COST: Use the position that has the least cost associated (eg. is closes or can be accessed the quickest)\n\nNote1: not all sorters support every strategy\nNote2: sorters usually don't have knowledge about positions, yet the distribution strategy needs to be evaluated per position (e.g. UNIFORM)"
+  FurtherProcessing:
+    type: object
+    properties:
+      sortingProductName:
+        type: string
+        description: 'The name of the selected sorting product.'
+        maxLength: 40
+    required:
+      - sortingProductName
+    additionalProperties: false
+    description: 'The container position to sort to.'
   InformationCarrier:
     type: object
     properties:
@@ -251,6 +262,28 @@ definitions:
       - ok
       - oversized
       - undersized
+    additionalProperties: false
+  LabelInformation:
+    type: object
+    properties:
+      furtherProcessing:
+        $ref: 'FurtherProcessing'
+        description: 'Information for a possible further processing step.'
+        maxLength: 40
+      sortingProductName:
+        type: string
+        description: 'The name of the selected sorting product.'
+        maxLength: 40
+      addressingDestinationName:
+        type: string
+        description: 'Name of the address destination, if not sorted to a special sort.'
+        maxLength: 40
+      specialSortName:
+        type: string
+        description: 'Special sort name if not sorted to an address destination.'
+        maxLength: 40
+    required:
+      - sortingProductName
     additionalProperties: false
   LegalForTradeState:
     type: object
@@ -524,6 +557,9 @@ definitions:
       timestamp:
         $ref: 'DateTime'
         description: 'Timestamp of data collection.'
+      labelInformation:
+        $ref: 'LabelInformation'
+        description: 'Information for label creation.'
       outletGroup:
         $ref: 'OutletGroup'
         description: 'The outlet group containing the outlets.'
@@ -535,6 +571,7 @@ definitions:
       - sortingProcess
       - processingItemId
       - timestamp
+      - labelInformation
       - outletGroup
       - sortplanId
     additionalProperties: false
