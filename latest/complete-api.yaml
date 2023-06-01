@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 1.4.0-feature-PZS-8340-api-fur-sperrgut-leitetikette-erstellen.10
+  version: 1.4.0-feature-PZS-8340-api-fur-sperrgut-leitetikette-erstellen.11
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -570,7 +570,6 @@ definitions:
       - sortingProcess
       - processingItemId
       - timestamp
-      - labelInformation
       - outletGroup
       - sortplanId
     additionalProperties: false
