@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 1.4.0-feature-PZS-8340-api-fur-sperrgut-leitetikette-erstellen.11
+  version: 1.4.0-feature-PZS-8340-api-fur-sperrgut-leitetikette-erstellen.12
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -263,7 +263,7 @@ definitions:
       - oversized
       - undersized
     additionalProperties: false
-  LabelInformation:
+  Label:
     type: object
     properties:
       furtherProcessing:
@@ -275,11 +275,11 @@ definitions:
         maxLength: 40
       addressingDestinationName:
         type: string
-        description: 'Name of the address destination, if not sorted to a special sort.'
+        description: 'Name of the addressing destination, if not sorted to a special sort.'
         maxLength: 40
       specialSortName:
         type: string
-        description: 'Special sort name if not sorted to an address destination.'
+        description: 'Special sort name if not sorted to an addressing destination.'
         maxLength: 40
     required:
       - sortingProductName
@@ -556,8 +556,8 @@ definitions:
       timestamp:
         $ref: 'DateTime'
         description: 'Timestamp of data collection.'
-      labelInformation:
-        $ref: 'LabelInformation'
+      label:
+        $ref: 'Label'
         description: 'Information for label creation.'
       outletGroup:
         $ref: 'OutletGroup'
