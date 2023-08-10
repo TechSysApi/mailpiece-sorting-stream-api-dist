@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 1.4.1-feature-addReference.2
+  version: 1.5.0-feature-addReference.4
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -398,6 +398,10 @@ definitions:
   RequestMailpieceAttributes:
     type: object
     properties:
+      eventId:
+        type: string
+        description: "A unique identifier for this event.\nACTION: This field is required but marked as optional to allow for a non breaking change.\nThe next version of this API will mark this as reuired."
+        maxLength: 200
       sortingUnitKey:
         type: string
         description: 'Unique identifier of the sorting unit at a specific location.'
@@ -485,6 +489,10 @@ definitions:
   SubmitMailpiece:
     type: object
     properties:
+      eventId:
+        type: string
+        description: "A unique identifier for this event.\nACTION: This field is required but marked as optional to allow for a non breaking change.\nThe next version of this API will mark this as reuired."
+        maxLength: 200
       sortingUnitKey:
         type: string
         description: 'Unique identifier of the sorting unit at a specific location.'
@@ -542,6 +550,10 @@ definitions:
   TransmitMailpieceAttributes:
     type: object
     properties:
+      eventId:
+        type: string
+        description: "A unique identifier for this event.\nACTION: This field is required but marked as optional to allow for a non breaking change.\nThe next version of this API will mark this as reuired."
+        maxLength: 200
       sortingUnitKey:
         type: string
         description: 'Unique identifier of the sorting unit at a specific location.'
@@ -577,6 +589,10 @@ definitions:
   UpdateMailpieceAttributes:
     type: object
     properties:
+      eventId:
+        type: string
+        description: "A unique identifier for this event.\nACTION: This field is required but marked as optional to allow for a non breaking change.\nThe next version of this API will mark this as reuired."
+        maxLength: 200
       sortingUnitKey:
         type: string
         description: 'Unique identifier of the sorting unit at a specific location.'
@@ -605,6 +621,9 @@ definitions:
       sortReason:
         $ref: 'SortReason'
         description: 'The reason why the mailpiece has been discharged.'
+      transmitMailpieceAttributeEventId:
+        type: string
+        description: "The eventId of the transmit-mailpiece-attributes message that was used to sort this mailpiece.\nIf the mailpiece has not been sorted according to a transmit-mailpiece-attributes\n(eg. fallback outlet) this field must be null."
     required:
       - sortingUnitKey
       - sortingProcess
