@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 1.5.0-feature-addReference.4
+  version: 1.5.0-feature-addReference.5
 host: 'server:8080'
 basePath: mqtt
 paths:
