@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 1.5.0-feature-addReference.5
+  version: 1.5.0-feature-addReference.6
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -400,7 +400,7 @@ definitions:
     properties:
       eventId:
         type: string
-        description: "A unique identifier for this event.\nACTION: This field is required but marked as optional to allow for a non breaking change.\nThe next version of this API will mark this as reuired."
+        description: "A unique identifier for this event.\nACTION: This field is required but marked as optional to allow for a non breaking change.\nThe next version of this API will mark this as required."
         maxLength: 200
       sortingUnitKey:
         type: string
@@ -491,7 +491,7 @@ definitions:
     properties:
       eventId:
         type: string
-        description: "A unique identifier for this event.\nACTION: This field is required but marked as optional to allow for a non breaking change.\nThe next version of this API will mark this as reuired."
+        description: "A unique identifier for this event.\nACTION: This field is required but marked as optional to allow for a non breaking change.\nThe next version of this API will mark this as required."
         maxLength: 200
       sortingUnitKey:
         type: string
@@ -552,7 +552,7 @@ definitions:
     properties:
       eventId:
         type: string
-        description: "A unique identifier for this event.\nACTION: This field is required but marked as optional to allow for a non breaking change.\nThe next version of this API will mark this as reuired."
+        description: "A unique identifier for this event.\nACTION: This field is required but marked as optional to allow for a non breaking change.\nThe next version of this API will mark this as required."
         maxLength: 200
       sortingUnitKey:
         type: string
@@ -591,7 +591,7 @@ definitions:
     properties:
       eventId:
         type: string
-        description: "A unique identifier for this event.\nACTION: This field is required but marked as optional to allow for a non breaking change.\nThe next version of this API will mark this as reuired."
+        description: "A unique identifier for this event.\nACTION: This field is required but marked as optional to allow for a non breaking change.\nThe next version of this API will mark this as required."
         maxLength: 200
       sortingUnitKey:
         type: string
