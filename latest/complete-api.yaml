@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 2.0.0-feature-addSubmitreason.1
+  version: 2.0.0-feature-addSubmitreason.2
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -511,7 +511,6 @@ definitions:
       sourceId:
         type: string
         description: 'Refers to a module id as event-source.'
-        pattern: '[A-Z]{3}[0-9]{2}'
       mailpieceAttributes:
         $ref: 'MailpieceAttributes'
         description: "Provides basic mailpiece related information:\r\n\r\n- the kind of the mail item\r\n- a preknowledge result if a barcode reader or some other type of Enrichment Device is directly attached to the MC.\r\n   This result will be in accordance with the result type specified in the IC-ED interface."
