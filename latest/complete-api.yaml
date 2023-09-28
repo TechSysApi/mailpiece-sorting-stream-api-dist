@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 2.0.0
+  version: 2.0.1-feature-removeActions.1
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -400,7 +400,7 @@ definitions:
     properties:
       eventId:
         type: string
-        description: "A unique identifier for this event.\nACTION: This field is required but marked as optional to allow for a non breaking change.\nThe next version of this API will mark this as required."
+        description: 'A unique identifier for this event.'
         maxLength: 200
       sortingUnitKey:
         type: string
@@ -420,11 +420,11 @@ definitions:
         description: 'The reason why machine requests a new destination for the mailpiece.'
       recirculations:
         $ref: 'Int'
-        description: "The number of recirculations of a Mailpiece on the sorting machine.\nIncremented by the machine whenever the Mailpiece completes a full round.\nStarts with 0."
+        description: "The number of recirculations of a Mailpiece on the sorting machine.\r\nIncremented by the machine whenever the Mailpiece completes a full round.\r\nStarts with 0."
         minimum: 0
       lastOutlet:
         type: string
-        description: "Last outlet of an outlet group associated to the request reason.\nMust be set by the machine, whenever the request reason refers to an outlet, e.g. OUTLET_NOT_AVAILABLE, OUTLET_UNKNOWN."
+        description: "Last outlet of an outlet group associated to the request reason.\r\nMust be set by the machine, whenever the request reason refers to an outlet, e.g. OUTLET_NOT_AVAILABLE, OUTLET_UNKNOWN."
       timestamp:
         type: string
         description: 'Timestamp of data collection.'
@@ -434,6 +434,7 @@ definitions:
         description: 'Refers to a module id as event-source.'
         pattern: '[A-Z]{3}[0-9]{2}'
     required:
+      - eventId
       - sortingUnitKey
       - sortingProcess
       - processingItemId
@@ -442,7 +443,7 @@ definitions:
       - timestamp
       - sourceId
     additionalProperties: false
-    description: "This type provides the requester with the ability to obtain the results of an enrichment response. The RC\nreturns the document either on request of the MC or in an unsolicited fashion.\nThe MC expects to get all defined attributes for the corresponding mailpiece from the RC System."
+    description: "This type provides the requester with the ability to obtain the results of an enrichment response. The RC\r\nreturns the document either on request of the MC or in an unsolicited fashion.\r\nThe MC expects to get all defined attributes for the corresponding mailpiece from the RC System."
   RequestReason:
     type: string
     enum:
@@ -491,7 +492,7 @@ definitions:
     properties:
       eventId:
         type: string
-        description: "A unique identifier for this event.\r\nACTION: This field is required but marked as optional to allow for a non breaking change.\r\nThe next version of this API will mark this as required."
+        description: 'A unique identifier for this event.'
         maxLength: 200
       sortingUnitKey:
         type: string
@@ -518,6 +519,7 @@ definitions:
         $ref: 'SubmitReasons'
         description: 'The reason why this submit-mailpiece was sent.'
     required:
+      - eventId
       - sortingUnitKey
       - sortingProcess
       - processingItemId
@@ -600,7 +602,7 @@ definitions:
     properties:
       eventId:
         type: string
-        description: "A unique identifier for this event.\nACTION: This field is required but marked as optional to allow for a non breaking change.\nThe next version of this API will mark this as required."
+        description: 'A unique identifier for this event.'
         maxLength: 200
       sortingUnitKey:
         type: string
@@ -623,17 +625,18 @@ definitions:
         pattern: '[A-Z]{3}[0-9]{2}'
       outlet:
         type: string
-        description: "The outlet to which the machine physically sorted the mail piece.\nAn outlet is not always available (i.e. for bulk sorting)"
+        description: "The outlet to which the machine physically sorted the mail piece.\r\nAn outlet is not always available (i.e. for bulk sorting)"
       finalSorted:
         type: boolean
-        description: "A boolean value indicating whether or not processing for a mail piece is complete.\n\n- false: mail piece was discharged\n- true: Discharging was verified"
+        description: "A boolean value indicating whether or not processing for a mail piece is complete.\r\n\r\n- false: mail piece was discharged\r\n- true: Discharging was verified"
       sortReason:
         $ref: 'SortReason'
         description: 'The reason why the mailpiece has been discharged.'
       transmitMailpieceAttributeEventId:
         type: string
-        description: "The eventId of the transmit-mailpiece-attributes message that was used to sort this mailpiece.\nIf the mailpiece has not been sorted according to a transmit-mailpiece-attributes\n(eg. fallback outlet) this field must be null."
+        description: "The eventId of the transmit-mailpiece-attributes message that was used to sort this mailpiece.\r\nIf the mailpiece has not been sorted according to a transmit-mailpiece-attributes\r\n(eg. fallback outlet) this field must be null."
     required:
+      - eventId
       - sortingUnitKey
       - sortingProcess
       - processingItemId
