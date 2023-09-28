@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 1.6.0
+  version: 2.0.0
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -491,7 +491,7 @@ definitions:
     properties:
       eventId:
         type: string
-        description: "A unique identifier for this event.\nACTION: This field is required but marked as optional to allow for a non breaking change.\nThe next version of this API will mark this as required."
+        description: "A unique identifier for this event.\r\nACTION: This field is required but marked as optional to allow for a non breaking change.\r\nThe next version of this API will mark this as required."
         maxLength: 200
       sortingUnitKey:
         type: string
@@ -511,17 +511,26 @@ definitions:
       sourceId:
         type: string
         description: 'Refers to a module id as event-source.'
-        pattern: '[A-Z]{3}[0-9]{2}'
       mailpieceAttributes:
         $ref: 'MailpieceAttributes'
-        description: "Provides basic mailpiece related information:\n\n- the kind of the mail item\n- a preknowledge result if a barcode reader or some other type of Enrichment Device is directly attached to the MC.\n   This result will be in accordance with the result type specified in the IC-ED interface."
+        description: "Provides basic mailpiece related information:\r\n\r\n- the kind of the mail item\r\n- a preknowledge result if a barcode reader or some other type of Enrichment Device is directly attached to the MC.\r\n   This result will be in accordance with the result type specified in the IC-ED interface."
+      submitReason:
+        $ref: 'SubmitReasons'
+        description: 'The reason why this submit-mailpiece was sent.'
     required:
       - sortingUnitKey
       - sortingProcess
       - processingItemId
       - timestamp
       - sourceId
+      - submitReason
     additionalProperties: false
+  SubmitReasons:
+    type: string
+    enum:
+      - INDUCTION
+      - STRAY_ITEM
+    description: "Defines the sorting process.\r\n- INDUCTION: The mailpeice was induced in a regular way (through the induction line)\r\n- STRAY_ITEM: A stray item was detected on the sorter and submitted"
   Symbology:
     type: string
     enum:
