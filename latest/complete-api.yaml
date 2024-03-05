@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 2.0.1
+  version: 2.1.0
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -476,7 +476,8 @@ definitions:
       - DIMENSION_ERROR
       - WEIGHT_ERROR
       - DIRECT_SORTING_MODE
-    description: "Defines the machine specific sort reasons.\nList of values:\n- OK: The item has been discharged accoding to the infromation received in the transmit-mailpiece-attributes message.\n- FALLBACK_OUTLET: Item has reached the max allowed amount of recirculations or end of line on a linear sorter. Also applies for items with discharge error.\n- ITEM_DISAPPEARED: The item was lost at unknown location.\n- DIMENSION_ERROR: Item oversize. The item was discharged, because of dimension exceed.\n- WEIGHT_ERROR: The item was discharged because weight limit has been exceeded\n- DIRECT_SORTING_MODE: Item sorted by the direct sorting mode."
+      - MANUAL_CODING_TIMEOUT
+    description: "Defines the machine specific sort reasons.\nList of values:\n- OK: The item has been discharged accoding to the infromation received in the transmit-mailpiece-attributes message.\n- FALLBACK_OUTLET: Item has reached the max allowed amount of recirculations or end of line on a linear sorter. Also applies for items with discharge error.\n- ITEM_DISAPPEARED: The item was lost at unknown location.\n- DIMENSION_ERROR: Item oversize. The item was discharged, because of dimension exceed.\n- WEIGHT_ERROR: The item was discharged because weight limit has been exceeded\n- DIRECT_SORTING_MODE: Item sorted by the direct sorting mode.\n- MANUAL_CODING_TIMEOUT: Manual coding of item was started but not finished (e.g. logout of coding client, new coding was started, browser shut-down...)"
   SortingProcess:
     type: string
     enum:
@@ -622,7 +623,6 @@ definitions:
       sourceId:
         type: string
         description: 'Refers to a module id as event-source.'
-        pattern: '[A-Z]{3}[0-9]{2}'
       outlet:
         type: string
         description: "The outlet to which the machine physically sorted the mail piece.\r\nAn outlet is not always available (i.e. for bulk sorting)"
