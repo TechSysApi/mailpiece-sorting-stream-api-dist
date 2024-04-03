@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 2.2.0-kaeserst-1712071006230.3
+  version: 2.2.0-kaeserst-1712071006230.6
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -370,9 +370,9 @@ definitions:
         $ref: 'DistributionStrategy'
         description: 'Defines the distribution strategy to use when multiple container postitions exist for a given outlet group.'
       virtualDestination:
-        $ref: 'Int'
+        type: string
         description: 'Defines the virtual (sorting) destination used in the parcel centers'
-        minimum: 0
+        pattern: '[0-9]{1,16}'
     required:
       - name
       - containerPositions
