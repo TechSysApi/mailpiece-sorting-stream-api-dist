@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 2.2.0-feature-provisional-mailpiece-attributes.1
+  version: 2.2.0-feature-provisional-mailpiece-attributes.2
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -99,25 +99,13 @@ paths:
           description: 'two-digit padded number identifying the system instance issuing the message'
           type: string
           default: '01'
-        -
-          name: dstSystem
-          in: path
-          description: '3-letter uppercase name identifying the system receiving the message'
-          type: string
-          default: ASL
-        -
-          name: dstInstance
-          in: path
-          description: 'two-digit padded number identifying the system instance receiving the message'
-          type: string
-          default: '01'
       responses:
         default:
           schema: {$ref: 'TransmitMailpieceAttributes'}
   '/{sortingUnitKey}/mailpiece-sorting/v1/control/transmit-provisional-mailpiece-attributes/{srcSystem}/{srcInstance}/':
     post:
       summary: 'ATG-4 Transmit Mailpiece Attributes (Sortierziel berechnen)'
-      description: 'The RC System returns the mailpiece attributes to the Machine for the first time, in response to a Submit Mailpiece.'
+      description: 'The RC System returns the provisional mailpiece attributes to the Machine, if explicitly requested in SubmitMailpiece.'
       tags:
         - control
       parameters:
@@ -131,18 +119,6 @@ paths:
           name: srcInstance
           in: path
           description: 'two-digit padded number identifying the system instance issuing the message'
-          type: string
-          default: '01'
-        -
-          name: dstSystem
-          in: path
-          description: '3-letter uppercase name identifying the system receiving the message'
-          type: string
-          default: ASL
-        -
-          name: dstInstance
-          in: path
-          description: 'two-digit padded number identifying the system instance receiving the message'
           type: string
           default: '01'
       responses:
@@ -553,6 +529,9 @@ definitions:
       submitReason:
         $ref: 'SubmitReasons'
         description: 'The reason why this submit-mailpiece was sent.'
+      requestProvisionalMailpieceAttributes:
+        type: boolean
+        description: "A boolean value indicating whether the sorting system must publish provisional transmit mailpiece attributes.\r\nWhen not set, the default value is false."
     required:
       - eventId
       - sortingUnitKey
