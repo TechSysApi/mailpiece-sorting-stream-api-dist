@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 2.4.0-feature-add-image-soruce-revert-processpoint.1
+  version: 2.5.0-feature-add-image-soruce-revert-processpoint.2
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -39,7 +39,7 @@ paths:
     x-data:
       classification: P1
       confidentiality: C2
-  '{sortingUnitKey}/mailpiece-sorting/v1/device/request-mailpiece-attributes/{srcSystem}/{srcInstance}/':
+  '{sortingUnitKey}/mailpiece-sorting/v1/device/request-mailpiece-attributes/{srcSystem}/{srcInstance}':
     post:
       summary: 'ATG-4 Request Mailpiece Attributes (Sortierziel berechnen)'
       description: 'Request for the coding result (outlet group)'
@@ -89,7 +89,7 @@ paths:
     x-data:
       classification: P1
       confidentiality: C2
-  '{sortingUnitKey}/mailpiece-sorting/v1/control/transmit-mailpiece-attributes/{srcSystem}/{srcInstance}/':
+  '{sortingUnitKey}/mailpiece-sorting/v1/control/transmit-mailpiece-attributes/{srcSystem}/{srcInstance}':
     post:
       summary: 'ATG-4 Transmit Mailpiece Attributes (Sortierziel berechnen)'
       description: 'The RC System returns mailpiece attributes to the Machine, either in response to a Submit Mailpiece or a Request Mailpiece Attributes. There may be multiple responses of Transmit Mailpiece Attributes for a single “Submit Mailpiece” message.'
@@ -114,7 +114,7 @@ paths:
     x-data:
       classification: P1
       confidentiality: C2
-  '{sortingUnitKey}/mailpiece-sorting/v1/control/transmit-provisional-mailpiece-attributes/{srcSystem}/{srcInstance}/':
+  '{sortingUnitKey}/mailpiece-sorting/v1/control/transmit-provisional-mailpiece-attributes/{srcSystem}/{srcInstance}':
     post:
       summary: 'ATG-4 Transmit Mailpiece Attributes (Sortierziel berechnen)'
       description: 'The RC System returns the provisional mailpiece attributes to the Machine, if explicitly requested in SubmitMailpiece.'
@@ -542,7 +542,10 @@ definitions:
         format: date-time
       sourceId:
         type: string
-        description: 'Refers to a module id as event-source.'
+        description: "Refers to a module id as event-source.\r\nDEPRECATED: will be removed as soon as the producers have switched to the imageSource"
+      imageSource:
+        type: string
+        description: "The source of the image that is related to the submit message, usually a DS or DWS tunnel.\r\nThe image may be captured before or after the submit message is sent, which in turn may or may not correspond with the induction of the parcel on the sorter.\r\nIt follows the naming convention of the swiss post for eletcromechanical elements of a sorting installation.\r\n\"=aaaaaa.bbbbbbb+ccccc-ddddddddd\"\r\na: System part   (=) (system part in the overall system; position) max. 5 digits\r\nb: Module        (.) (module; type; position) max. 7 digits\r\nc: Component     (+) (installation location of the element; position) max. 5 digits\r\nd: Element       (-) (element type; number) max. 9 digits"
       mailpieceAttributes:
         $ref: 'MailpieceAttributes'
         description: "Provides basic mailpiece related information:\r\n\r\n- the kind of the mail item\r\n- a preknowledge result if a barcode reader or some other type of Enrichment Device is directly attached to the MC.\r\n   This result will be in accordance with the result type specified in the IC-ED interface."
