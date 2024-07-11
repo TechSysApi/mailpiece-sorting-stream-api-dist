@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 2.5.0-feature-add-image-soruce-revert-processpoint.4
+  version: 2.5.0-feature-add-image-soruce-revert-processpoint.5
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -424,6 +424,9 @@ definitions:
       binOccupancy:
         $ref: 'BinOccupancyState'
     additionalProperties: false
+  SystemElement:
+    type: string
+    description: "Follows the naming convention of the swiss post for eletcromechanical elements of a sorting installation.\n\"=aaaaaa.bbbbbbb+ccccc-ddddddddd\"\na: System part   (=) (system part in the overall system; position) max. 5 digits\nb: Module        (.) (module; type; position) max. 7 digits\nc: Component     (+) (installation location of the element; position) max. 5 digits\nd: Element       (-) (element type; number) max. 9 digits\n[ACTION]: will become mandatory as soon as all producers provide it."
   RequestMailpieceAttributes:
     type: object
     properties:
@@ -460,8 +463,11 @@ definitions:
         format: date-time
       sourceId:
         type: string
-        description: 'Refers to a module id as event-source.'
+        description: "Refers to a module id as event-source.\r\nDEPRECATED: will be removed as soon as the producers have switched to the processPoint."
         pattern: '[A-Z]{3}[0-9]{2}'
+      processPoint:
+        $ref: 'SystemElement'
+        description: 'The system element from which the request was sent.'
     required:
       - eventId
       - sortingUnitKey
@@ -542,10 +548,13 @@ definitions:
         format: date-time
       sourceId:
         type: string
-        description: "Refers to a module id as event-source.\r\nDEPRECATED: will be removed as soon as the producers have switched to the imageSource"
+        description: "Refers to a module id as event-source.\r\nDEPRECATED: will be removed as soon as the producers have switched to the processPoint."
+      processPoint:
+        $ref: 'SystemElement'
+        description: 'The location from which the submit was sent.'
       imageSource:
-        type: string
-        description: "The source of the image that is related to the submit message, usually a DS or DWS tunnel.\r\nThe image may be captured before or after the submit message is sent, which in turn may or may not correspond with the induction of the parcel on the sorter.\r\nIt follows the naming convention of the swiss post for eletcromechanical elements of a sorting installation.\r\n\"=aaaaaa.bbbbbbb+ccccc-ddddddddd\"\r\na: System part   (=) (system part in the overall system; position) max. 5 digits\r\nb: Module        (.) (module; type; position) max. 7 digits\r\nc: Component     (+) (installation location of the element; position) max. 5 digits\r\nd: Element       (-) (element type; number) max. 9 digits"
+        $ref: 'SystemElement'
+        description: 'The source of the image that is related to the submit message, usually a DS or DWS tunnel.'
       mailpieceAttributes:
         $ref: 'MailpieceAttributes'
         description: "Provides basic mailpiece related information:\r\n\r\n- the kind of the mail item\r\n- a preknowledge result if a barcode reader or some other type of Enrichment Device is directly attached to the MC.\r\n   This result will be in accordance with the result type specified in the IC-ED interface."
@@ -658,9 +667,9 @@ definitions:
         format: date-time
       sourceId:
         type: string
-        description: 'Refers to a module id as event-source.'
+        description: "Refers to a module id as event-source.\r\nDEPRECATED: will be removed as soon as the producers have switched to the processPoint."
       outlet:
-        type: string
+        $ref: 'SystemElement'
         description: "The outlet to which the machine physically sorted the mail piece.\r\nAn outlet is not always available (i.e. for bulk sorting)"
       finalSorted:
         type: boolean
