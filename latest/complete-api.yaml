@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 2.5.0-feature-add-image-soruce-revert-processpoint.5
+  version: 2.5.0-feature-add-image-soruce-revert-processpoint.6
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -455,7 +455,7 @@ definitions:
         description: "The number of recirculations of a Mailpiece on the sorting machine.\r\nIncremented by the machine whenever the Mailpiece completes a full round.\r\nStarts with 0."
         minimum: 0
       lastOutlet:
-        type: string
+        $ref: 'SystemElement'
         description: "Last outlet of an outlet group associated to the request reason.\r\nMust be set by the machine, whenever the request reason refers to an outlet, e.g. OUTLET_NOT_AVAILABLE, OUTLET_UNKNOWN."
       timestamp:
         type: string
