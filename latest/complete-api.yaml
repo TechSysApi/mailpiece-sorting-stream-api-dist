@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 2.5.0-feature-add-image-soruce-revert-processpoint.8
+  version: 2.5.0-feature-add-image-soruce-revert-processpoint.9
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -169,7 +169,7 @@ definitions:
     description: '<a href="https://swagger.io/docs/specification/data-models/data-types/#numbers">Number @asType integer</a>'
   ResourceIdentifierFormat:
     type: string
-    description: "Follows the naming convention of the swiss post for ressources of a sorting installation.\n\"=aaaaaa.bbbbbbb+ccccc-ddddddddd\"\na: System part   (=) (system part in the overall system; position) max. 5 digits\nb: Module        (.) (module; type; position) max. 7 digits\nc: Component     (+) (installation location of the element; position) max. 5 digits\nd: Element       (-) (element type; number) max. 9 digits\n[ACTION]: will become mandatory as soon as all producers provide it."
+    description: "Follows the naming convention of the swiss post for resources of a sorting installation.\n\"=aaaaaa.bbbbbbb+ccccc-ddddddddd\"\na: System part   (=) (system part in the overall system; position) max. 5 digits\nb: Module        (.) (module; type; position) max. 7 digits\nc: Component     (+) (installation location of the element; position) max. 5 digits\nd: Element       (-) (element type; number) max. 9 digits\n[ACTION]: will become mandatory as soon as all producers provide it."
     maxLength: 200
   ContainerPosition:
     type: object
