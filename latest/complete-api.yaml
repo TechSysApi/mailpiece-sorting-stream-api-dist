@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 2.5.0-feature-add-image-soruce-revert-processpoint.7
+  version: 2.5.0-feature-add-image-soruce-revert-processpoint.8
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -167,7 +167,7 @@ definitions:
   Int:
     type: integer
     description: '<a href="https://swagger.io/docs/specification/data-models/data-types/#numbers">Number @asType integer</a>'
-  RessourceIdentifierFormat:
+  ResourceIdentifierFormat:
     type: string
     description: "Follows the naming convention of the swiss post for ressources of a sorting installation.\n\"=aaaaaa.bbbbbbb+ccccc-ddddddddd\"\na: System part   (=) (system part in the overall system; position) max. 5 digits\nb: Module        (.) (module; type; position) max. 7 digits\nc: Component     (+) (installation location of the element; position) max. 5 digits\nd: Element       (-) (element type; number) max. 9 digits\n[ACTION]: will become mandatory as soon as all producers provide it."
     maxLength: 200
@@ -183,7 +183,7 @@ definitions:
         description: "This is the relative location of this container position within an outlet. It can be used to place the label\ninformation on the correct spot on a display."
         minimum: 1
       outletName:
-        $ref: 'RessourceIdentifierFormat'
+        $ref: 'ResourceIdentifierFormat'
         description: "The outlet name, where this container position belongs to.\nThis is only needed, if this container position is related to an outlet.\ni.e. for bulk sorting, no outlet is available."
       priority:
         $ref: 'Int'
@@ -455,7 +455,7 @@ definitions:
         description: "The number of recirculations of a Mailpiece on the sorting machine.\r\nIncremented by the machine whenever the Mailpiece completes a full round.\r\nStarts with 0."
         minimum: 0
       lastOutlet:
-        $ref: 'RessourceIdentifierFormat'
+        $ref: 'ResourceIdentifierFormat'
         description: "Last outlet of an outlet group associated to the request reason.\r\nMust be set by the machine, whenever the request reason refers to an outlet, e.g. OUTLET_NOT_AVAILABLE, OUTLET_UNKNOWN."
       timestamp:
         type: string
@@ -466,7 +466,7 @@ definitions:
         description: "Refers to a module id as event-source.\r\nDEPRECATED: will be removed as soon as the producers and consumers have switched to the processPoint."
         pattern: '[A-Z]{3}[0-9]{2}'
       processPoint:
-        $ref: 'RessourceIdentifierFormat'
+        $ref: 'ResourceIdentifierFormat'
         description: "The system element from which the request was sent.\r\nACTION: will be marked as mandatory as sson as all producers and consumers support it."
     required:
       - eventId
@@ -550,10 +550,10 @@ definitions:
         type: string
         description: "Refers to a module id as event-source.\r\nDEPRECATED: will be removed as soon as all producers and consumers have switched to the processPoint."
       processPoint:
-        $ref: 'RessourceIdentifierFormat'
+        $ref: 'ResourceIdentifierFormat'
         description: "The location from which the submit was sent.\r\nACTION: will be marked as mandatory as sson as all producers and consumers support it."
       imageSource:
-        $ref: 'RessourceIdentifierFormat'
+        $ref: 'ResourceIdentifierFormat'
         description: 'The source of the image that is related to the submit message, usually a DS or DWS tunnel.'
       mailpieceAttributes:
         $ref: 'MailpieceAttributes'
@@ -669,10 +669,10 @@ definitions:
         type: string
         description: "Refers to a module id as event-source.\r\nDEPRECATED: will be removed as soon as all producers and consumers have switched to the processPoint."
       outlet:
-        $ref: 'RessourceIdentifierFormat'
+        $ref: 'ResourceIdentifierFormat'
         description: "The outlet to which the machine physically sorted the mail piece.\r\nAn outlet is not always available (i.e. for bulk sorting)"
       processPoint:
-        $ref: 'RessourceIdentifierFormat'
+        $ref: 'ResourceIdentifierFormat'
         description: "The location from which the update was sent.\r\nACTION: will be marked as mandatory as sson as all producers and consumers support it."
       finalSorted:
         type: boolean
