@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 2.6.0-feature-PZS-10656-sendung-manuell-sortieren.1
+  version: 2.6.0-feature-PZS-10656-sendung-manuell-sortieren.2
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -654,9 +654,9 @@ definitions:
       sortplanId:
         type: string
         description: 'The id of the sortplan used to calculate this result.'
-      manualSortingAllowed:
+      manualSortingCompletionPossible:
         type: boolean
-        description: 'The mailpiece may be sorted manually. A sorting product could be found given the coded address and no further address or service coding is needed.'
+        description: 'The mailpiece may be sorted manually to a container position. A sorting product could be found given the coded address and no further address or service coding is needed.'
     required:
       - sortingUnitKey
       - sortingProcess
