@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 2.5.0
+  version: 2.6.0-feature-PZS-10656-sendung-manuell-sortieren.1
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -164,6 +164,10 @@ definitions:
       - conveyingAidDetected
     additionalProperties: false
     description: "Doppelbelegung / Leerschalen-kontrolle\nemptyBinOccupied: Belegte Leerschale\nbinMultipleItemOccupied: Doppelbelegung - Erkennung der Schalenbelegung von DWS\nfrontOverlappingLimitExceeded: Überstand vorne zu groß\nbackOverlappingLimitExceeded: Überstand hinten zu groß\nmultipleItemsDetected: >= 2 Objekt erkannt\nconveyingAidDetected: Förderhilfe erkannt"
+  ContainerPositionName:
+    type: string
+    description: 'Name of a container position'
+    maxLength: 40
   Int:
     type: integer
     description: '<a href="https://swagger.io/docs/specification/data-models/data-types/#numbers">Number @asType integer</a>'
@@ -256,6 +260,11 @@ definitions:
         type: string
         description: 'The name of the selected sorting product.'
         maxLength: 40
+      containerPositionNames:
+        type: array
+        items:
+          $ref: 'ContainerPositionName'
+        description: 'Names of the container positions associated with the sorting product for further processing.'
     required:
       - sortingProductName
     additionalProperties: false
@@ -308,6 +317,15 @@ definitions:
       specialSortName:
         type: string
         description: 'Special sort name if not sorted to an addressing destination.'
+        maxLength: 40
+      containerPositionNames:
+        type: array
+        items:
+          $ref: 'ContainerPositionName'
+        description: 'Names of the conveyor positions associated with the current sorting product or the sorting product of a further processing.'
+      logisticUnitName:
+        type: string
+        description: "The name of the logistic unit associated to the addressing destination.\nA logistic unit (LogE) defines a meaningful group of addressing destinations from a logistical point of view. This can, for example, include all mail items that are processed by a specific team at the delivery centre."
         maxLength: 40
     required:
       - sortingProductName
@@ -636,6 +654,9 @@ definitions:
       sortplanId:
         type: string
         description: 'The id of the sortplan used to calculate this result.'
+      manualSortingAllowed:
+        type: boolean
+        description: 'The mailpiece may be sorted manually. A sorting product could be found given the coded address and no further address or service coding is needed.'
     required:
       - sortingUnitKey
       - sortingProcess
