@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 2.6.0
+  version: 2.6.0-feature-PZS-10656-correct-comment.1
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -322,7 +322,7 @@ definitions:
         type: array
         items:
           $ref: 'ContainerPositionName'
-        description: 'Names of the conveyor positions associated with the current sorting product or the sorting product of a further processing.'
+        description: 'Names of the container positions associated with the sorting product.'
       logisticUnitName:
         type: string
         description: "The name of the logistic unit associated to the addressing destination.\nA logistic unit (LogE) defines a meaningful group of addressing destinations from a logistical point of view. This can, for example, include all mail items that are processed by a specific team at the delivery centre."
