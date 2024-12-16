@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 4.0.0
+  version: 4.1.0
 host: 'server:8080'
 basePath: mqtt
 paths:
