@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 4.2.0-feature-PZS-10949-api-design-for-dimension-and-weight.4
+  version: 4.2.0-feature-PZS-10949-api-design-for-dimension-and-weight.5
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -116,7 +116,7 @@ paths:
       confidentiality: C2
   '{sortingUnitKey}/mailpiece-sorting/v1/control/transmit-provisional-mailpiece-attributes/{srcSystem}/{srcInstance}':
     post:
-      summary: 'ATG-4 Transmit Mailpiece Attributes (Sortierziel berechnen)'
+      summary: 'Transmit Mailpiece Attributes (Sortierziel berechnen)'
       description: 'The RC System returns the provisional mailpiece attributes to the Machine, if explicitly requested in SubmitMailpiece.'
       tags:
         - control
@@ -141,7 +141,7 @@ paths:
       confidentiality: C2
   '{sortingUnitKey}/mailpiece-sorting/v1/device/submit-measurements/{srcSystem}/{srcInstance}':
     post:
-      summary: 'ATG-? Submit captured Measurements of Mailpiece (Teil-Sensordaten erhalten)'
+      summary: 'Submit captured Measurements of Mailpiece (Teil-Sensordaten erhalten)'
       description: 'Any measuring system provides the captured data.'
       tags:
         - device
