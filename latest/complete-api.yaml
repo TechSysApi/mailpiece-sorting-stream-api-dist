@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 4.2.0-feature-PZS-10949-api-design-for-dimension-and-weight.6
+  version: 4.2.0-feature-PZS-10949-api-design-for-dimension-and-weight.7
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -89,6 +89,31 @@ paths:
     x-data:
       classification: P1
       confidentiality: C2
+  '{sortingUnitKey}/mailpiece-sorting/v1/device/submit-measurements/{srcSystem}/{srcInstance}':
+    post:
+      summary: 'Submit Captured Measurements of Mailpiece (Teil-Sensordaten erhalten)'
+      description: 'Any measuring system provides the captured data.'
+      tags:
+        - device
+      parameters:
+        -
+          name: srcSystem
+          in: path
+          description: 'multi-letter uppercase name identifying the system issuing the message'
+          type: string
+          default: MMCB
+        -
+          name: srcInstance
+          in: path
+          description: 'two-digit padded number identifying the system instance issuing the message'
+          type: string
+          default: '01'
+      responses:
+        default:
+          schema: {$ref: 'SubmitMeasurements'}
+    x-data:
+      classification: P1
+      confidentiality: C2
   '{sortingUnitKey}/mailpiece-sorting/v1/control/transmit-mailpiece-attributes/{srcSystem}/{srcInstance}':
     post:
       summary: 'ATG-4 Transmit Mailpiece Attributes (Sortierziel berechnen)'
@@ -136,31 +161,6 @@ paths:
       responses:
         default:
           schema: {$ref: 'TransmitMailpieceAttributes'}
-    x-data:
-      classification: P1
-      confidentiality: C2
-  '{sortingUnitKey}/mailpiece-sorting/v1/device/submit-measurements/{srcSystem}/{srcInstance}':
-    post:
-      summary: 'Submit captured Measurements of Mailpiece (Teil-Sensordaten erhalten)'
-      description: 'Any measuring system provides the captured data.'
-      tags:
-        - device
-      parameters:
-        -
-          name: srcSystem
-          in: path
-          description: 'multi-letter uppercase name identifying the system issuing the message'
-          type: string
-          default: MMCB
-        -
-          name: srcInstance
-          in: path
-          description: 'two-digit padded number identifying the system instance issuing the message'
-          type: string
-          default: '01'
-      responses:
-        default:
-          schema: {$ref: 'SubmitMeasurements'}
     x-data:
       classification: P1
       confidentiality: C2
@@ -271,7 +271,7 @@ definitions:
         minimum: 0
       realVolume:
         type: number
-        description: 'Real volume measured by scanner in [cmm].'
+        description: 'Real volume measured by scanner in [mm^3].'
         minimum: 0
       legalForTrade:
         type: boolean
@@ -283,7 +283,7 @@ definitions:
       - height
       - legalForTrade
     additionalProperties: false
-    description: 'This type contains the captured measurements for a mail piece.'
+    description: 'This type contains the captured measurements for a mailpiece.'
   Dimension:
     type: object
     properties:
@@ -462,7 +462,7 @@ definitions:
     enum:
       - MANUALLY
       - AUTOMATIC
-    description: "Method of measurement.\r\nMANUALLY The values were entered manually\r\nAUTOMATIC The values were measured by a scanner"
+    description: "Method of measurement.\r\nMANUALLY The values were entered manually\r\nAUTOMATIC The values were measured by an automatic capturing device"
   OutletGroup:
     type: object
     properties:
@@ -651,7 +651,7 @@ definitions:
         description: "A boolean value indicating whether the sorting system must publish provisional transmit mailpiece attributes.\r\nWhen not set, the default value is false."
       expectDedicatedMeasurements:
         type: boolean
-        description: 'Dedicated measurements are to be expected and will be sent separately via the submit-measurements topic. Null=false.'
+        description: "Dedicated measurements are to be expected and will be sent separately via the submit-measurements topic. Null=false.\r\nACTION: will be marked as mandatory."
     required:
       - eventId
       - sortingUnitKey
@@ -678,7 +678,7 @@ definitions:
         maxLength: 200
       processingItemId:
         type: string
-        description: 'The machine specific identifier to track a mail item during a machine sorting cycle. The identifier is used to synchronize the data events between coding and sorting systems.'
+        description: 'The machine specific identifier to track a mailpiece during a machine sorting cycle. The identifier is used to synchronize the data events between coding and sorting systems.'
         maxLength: 32
       timestamp:
         $ref: 'DateTime'
@@ -696,7 +696,7 @@ definitions:
       - timestamp
       - processPoint
     additionalProperties: false
-    description: 'This type contains the captured measurements for a mail piece.'
+    description: 'This type contains the captured measurements for a mailpiece.'
   SubmitReasons:
     type: string
     enum:
