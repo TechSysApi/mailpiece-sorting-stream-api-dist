@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 4.1.0
+  version: 4.2.0
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -89,6 +89,31 @@ paths:
     x-data:
       classification: P1
       confidentiality: C2
+  '{sortingUnitKey}/mailpiece-sorting/v1/device/submit-measurements/{srcSystem}/{srcInstance}':
+    post:
+      summary: 'Submit Captured Measurements of Mailpiece (Teil-Sensordaten erhalten)'
+      description: 'Any measuring system provides the captured data.'
+      tags:
+        - device
+      parameters:
+        -
+          name: srcSystem
+          in: path
+          description: 'multi-letter uppercase name identifying the system issuing the message'
+          type: string
+          default: MMCB
+        -
+          name: srcInstance
+          in: path
+          description: 'two-digit padded number identifying the system instance issuing the message'
+          type: string
+          default: '01'
+      responses:
+        default:
+          schema: {$ref: 'SubmitMeasurements'}
+    x-data:
+      classification: P1
+      confidentiality: C2
   '{sortingUnitKey}/mailpiece-sorting/v1/control/transmit-mailpiece-attributes/{srcSystem}/{srcInstance}':
     post:
       summary: 'ATG-4 Transmit Mailpiece Attributes (Sortierziel berechnen)'
@@ -116,7 +141,7 @@ paths:
       confidentiality: C2
   '{sortingUnitKey}/mailpiece-sorting/v1/control/transmit-provisional-mailpiece-attributes/{srcSystem}/{srcInstance}':
     post:
-      summary: 'ATG-4 Transmit Mailpiece Attributes (Sortierziel berechnen)'
+      summary: 'Transmit Mailpiece Attributes (Sortierziel berechnen)'
       description: 'The RC System returns the provisional mailpiece attributes to the Machine, if explicitly requested in SubmitMailpiece.'
       tags:
         - control
@@ -226,6 +251,39 @@ definitions:
       - itemSizeClassification
     additionalProperties: false
     description: 'State of the measurement.'
+  DimensionMeasurements:
+    type: object
+    properties:
+      measurementMethod:
+        $ref: 'MeasurementMethod'
+        description: 'How the measurements were captured.'
+      length:
+        type: string
+        description: 'The longest side of the mailpiece in [mm]. A potential conveying aid height was already subtracted.'
+        minimum: 0
+      width:
+        type: string
+        description: 'The 2n longest side of the mailpiece in [mm]. A potential conveying aid height was already subtracted.'
+        minimum: 0
+      height:
+        type: string
+        description: 'The shortest side of the mailpiece in [mm]. A potential conveying aid height was already subtracted.'
+        minimum: 0
+      realVolume:
+        type: number
+        description: 'Real volume measured by scanner in [mm^3].'
+        minimum: 0
+      legalForTrade:
+        type: boolean
+        description: 'Legal for trade information.'
+    required:
+      - measurementMethod
+      - length
+      - width
+      - height
+      - legalForTrade
+    additionalProperties: false
+    description: 'This type contains the captured measurements for a mailpiece.'
   Dimension:
     type: object
     properties:
@@ -399,6 +457,12 @@ definitions:
       - FLAT_BUNDLE
       - PARCEL
     description: "Defines the mailpiece type.\nUNKNOWN Unknown mailpiece type for the sorter\nLETTER Mail item (Brief)\nLETTER_BUNDLE Not supported\nFLAT Big letters mostly from China (Kleinware)\nFLAT_BUNDLE Bundle of mail items (Bund)\nPARCEL Parcel item (Paket)"
+  MeasurementMethod:
+    type: string
+    enum:
+      - MANUALLY
+      - AUTOMATIC
+    description: "Method of measurement.\r\nMANUALLY The values were entered manually\r\nAUTOMATIC The values were measured by an automatic capturing device"
   OutletGroup:
     type: object
     properties:
@@ -585,6 +649,9 @@ definitions:
       requestProvisionalMailpieceAttributes:
         type: boolean
         description: "A boolean value indicating whether the sorting system must publish provisional transmit mailpiece attributes.\r\nWhen not set, the default value is false."
+      expectDedicatedMeasurements:
+        type: boolean
+        description: "Dedicated measurements are to be expected and will be sent separately via the submit-measurements topic. Null=false.\r\nACTION: will be marked as mandatory."
     required:
       - eventId
       - sortingUnitKey
@@ -594,6 +661,42 @@ definitions:
       - sourceId
       - submitReason
     additionalProperties: false
+  DateTime:
+    type: string
+    description: "<a href=\"https://swagger.io/docs/specification/data-models/data-types/#string\">String @format date-time</a>,\nas defined by <a href=\"https://tools.ietf.org/html/rfc3339#section-5.6\">RFC 3339, section 5.6</a>,\nfor example: <code>2014-05-22T10:42:42.542+00:00</code>."
+    format: date-time
+  SubmitMeasurements:
+    type: object
+    properties:
+      eventId:
+        type: string
+        description: 'A unique identifier for this event.'
+        maxLength: 200
+      sortingUnitKey:
+        type: string
+        description: 'Unique identifier of the sorting unit at a specific location.'
+        maxLength: 200
+      processingItemId:
+        type: string
+        description: 'The machine specific identifier to track a mailpiece during a machine sorting cycle. The identifier is used to synchronize the data events between coding and sorting systems.'
+        maxLength: 32
+      timestamp:
+        $ref: 'DateTime'
+        description: 'Timestamp of data collection.'
+      processPoint:
+        $ref: 'ResourceIdentifier'
+        description: 'The location from which the submit-measurements was sent.'
+      dimensions:
+        $ref: 'DimensionMeasurements'
+        description: 'Captured dimension measurements. Null is a valid value, meaning that there is no measurement for an unknown reason.'
+    required:
+      - eventId
+      - sortingUnitKey
+      - processingItemId
+      - timestamp
+      - processPoint
+    additionalProperties: false
+    description: 'This type contains the captured measurements for a mailpiece.'
   SubmitReasons:
     type: string
     enum:
@@ -622,10 +725,6 @@ definitions:
       - UPC_E
       - TEXT
     description: "NOT_RECOGNIZED The symbology is not recognized\nADDON Barcode Zusatz zu EAN und UPC\nCODABAR Barcode Codabar\nCODE_39 Barcode 39\nCODE_93 Barcode 93\nCODE_128 Barcode 128\nDATA_MATRIX Data Matrix Code\nEAN_8 International Article Number\nEAN_13 International Article Number\nEAN_128 International Article Number\nI2OF5 Interleved 2 of 5 Code\nMAXI_CODE Barcode Maxicode\nPDF_417 Barcode PDF417\nQR QR Barcode\nUPC_A Barcode Universal Product Codes (Normalversion)\nUPC_E Barcode Universal Product Codes (Kurzvariante)\nTEXT Text block (for example Postcode or AreaNumber for FLAT_BUNDLE)"
-  DateTime:
-    type: string
-    description: "<a href=\"https://swagger.io/docs/specification/data-models/data-types/#string\">String @format date-time</a>,\nas defined by <a href=\"https://tools.ietf.org/html/rfc3339#section-5.6\">RFC 3339, section 5.6</a>,\nfor example: <code>2014-05-22T10:42:42.542+00:00</code>."
-    format: date-time
   TransmitMailpieceAttributes:
     type: object
     properties:
