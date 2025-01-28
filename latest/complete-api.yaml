@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 4.2.0
+  version: 4.3.0
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -259,15 +259,15 @@ definitions:
         description: 'How the measurements were captured.'
       length:
         type: string
-        description: 'The longest side of the mailpiece in [mm]. A potential conveying aid height was already subtracted.'
+        description: 'The longest side of the mailpiece in [mm]. If a conveying aid was used, the additional height was already subtracted from the affected dimension.'
         minimum: 0
       width:
         type: string
-        description: 'The 2n longest side of the mailpiece in [mm]. A potential conveying aid height was already subtracted.'
+        description: 'The 2nd longest side of the mailpiece in [mm]. If a conveying aid was used, the additional height was already subtracted from the affected dimension.'
         minimum: 0
       height:
         type: string
-        description: 'The shortest side of the mailpiece in [mm]. A potential conveying aid height was already subtracted.'
+        description: 'The shortest side of the mailpiece in [mm]. If a conveying aid was used, the additional height was already subtracted from the affected dimension.'
         minimum: 0
       realVolume:
         type: number
@@ -460,9 +460,9 @@ definitions:
   MeasurementMethod:
     type: string
     enum:
-      - MANUALLY
+      - MANUAL
       - AUTOMATIC
-    description: "Method of measurement.\r\nMANUALLY The values were entered manually\r\nAUTOMATIC The values were measured by an automatic capturing device"
+    description: "Method of measurement.\r\nMANUAL The values were entered manually\r\nAUTOMATIC The values were measured by an automatic capturing device"
   OutletGroup:
     type: object
     properties:
