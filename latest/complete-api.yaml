@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 4.4.0-feat-add-container-position.2
+  version: 4.4.0-feat-add-container-position.3
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -322,7 +322,7 @@ definitions:
         type: array
         items:
           $ref: 'ContainerPositionName'
-        description: 'Names of the container positions associated with the sorting product for further processing.'
+        description: "Names of the container positions associated with the sorting product for further processing.\nDEPRECATED: Will be removed, use containerPositions instead."
       containerPositions:
         type: array
         items:
