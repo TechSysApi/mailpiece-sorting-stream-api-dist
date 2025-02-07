@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 4.3.0
+  version: 4.3.1-fix-types.2
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -258,15 +258,15 @@ definitions:
         $ref: 'MeasurementMethod'
         description: 'How the measurements were captured.'
       length:
-        type: string
+        type: number
         description: 'The longest side of the mailpiece in [mm]. If a conveying aid was used, the additional height was already subtracted from the affected dimension.'
         minimum: 0
       width:
-        type: string
+        type: number
         description: 'The 2nd longest side of the mailpiece in [mm]. If a conveying aid was used, the additional height was already subtracted from the affected dimension.'
         minimum: 0
       height:
-        type: string
+        type: number
         description: 'The shortest side of the mailpiece in [mm]. If a conveying aid was used, the additional height was already subtracted from the affected dimension.'
         minimum: 0
       realVolume:
