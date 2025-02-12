@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 4.3.1
+  version: 4.3.2-bugfix-dimensions-integer.1
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -258,19 +258,19 @@ definitions:
         $ref: 'MeasurementMethod'
         description: 'How the measurements were captured.'
       length:
-        type: number
+        type: integer
         description: 'The longest side of the mailpiece in [mm]. If a conveying aid was used, the additional height was already subtracted from the affected dimension.'
         minimum: 0
       width:
-        type: number
+        type: integer
         description: 'The 2nd longest side of the mailpiece in [mm]. If a conveying aid was used, the additional height was already subtracted from the affected dimension.'
         minimum: 0
       height:
-        type: number
+        type: integer
         description: 'The shortest side of the mailpiece in [mm]. If a conveying aid was used, the additional height was already subtracted from the affected dimension.'
         minimum: 0
       realVolume:
-        type: number
+        type: integer
         description: 'Real volume measured by scanner in [mm^3].'
         minimum: 0
       legalForTrade:
