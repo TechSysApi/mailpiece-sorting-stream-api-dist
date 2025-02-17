@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 4.3.2
+  version: 4.4.0
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -322,7 +322,12 @@ definitions:
         type: array
         items:
           $ref: 'ContainerPositionName'
-        description: 'Names of the container positions associated with the sorting product for further processing.'
+        description: "Names of the container positions associated with the sorting product for further processing.\nDEPRECATED: Will be removed, use containerPositions instead."
+      containerPositions:
+        type: array
+        items:
+          $ref: 'LabelContainerPosition'
+        description: 'List of positions associated with the sorting product for further processing.'
     required:
       - sortingProductName
     additionalProperties: false
@@ -358,6 +363,21 @@ definitions:
       - oversized
       - undersized
     additionalProperties: false
+  LabelContainerPosition:
+    type: object
+    properties:
+      positionName:
+        type: string
+        description: 'The name of the target container position.'
+        maxLength: 200
+      intermediatePositionName:
+        type: string
+        description: 'The name of the intermediate container position.'
+        maxLength: 200
+    required:
+      - positionName
+    additionalProperties: false
+    description: 'Information about the target and possible intermediate container postion.'
   Label:
     type: object
     properties:
@@ -380,7 +400,12 @@ definitions:
         type: array
         items:
           $ref: 'ContainerPositionName'
-        description: 'Names of the container positions associated with the sorting product.'
+        description: "Names of the container positions associated with the sorting product.\nDEPRECATED: Will be removed, use containerPositions instead."
+      containerPositions:
+        type: array
+        items:
+          $ref: 'LabelContainerPosition'
+        description: 'List of positions associated with the sorting product.'
       logisticUnitName:
         type: string
         description: "The name of the logistic unit associated to the addressing destination.\nA logistic unit (LogE) defines a meaningful group of addressing destinations from a logistical point of view. This can, for example, include all mail items that are processed by a specific team at the delivery centre."
