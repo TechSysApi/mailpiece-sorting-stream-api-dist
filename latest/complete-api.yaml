@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 4.5.0-feature-PZS-11087-desired-delivery-day.1
+  version: 4.5.0-feature-PZS-11087-desired-delivery-day.2
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -328,9 +328,6 @@ definitions:
         items:
           $ref: 'LabelContainerPosition'
         description: 'List of positions associated with the sorting product for further processing.'
-      desiredDeliveryWeekday:
-        $ref: 'Weekday'
-        description: "The desired delivery weekday if any.\nThis is only set when the mailpiece has to be put into storage."
     required:
       - sortingProductName
     additionalProperties: false
@@ -413,6 +410,9 @@ definitions:
         type: string
         description: "The name of the logistic unit associated to the addressing destination.\nA logistic unit (LogE) defines a meaningful group of addressing destinations from a logistical point of view. This can, for example, include all mail items that are processed by a specific team at the delivery centre."
         maxLength: 200
+      desiredDeliveryWeekday:
+        $ref: 'Weekday'
+        description: "The desired delivery weekday if any.\nThis is only set when the mailpiece has to be put into storage."
     required:
       - sortingProductName
     additionalProperties: false
