@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 4.5.0-feature-PZS-11087-desired-delivery-day.2
+  version: 4.5.0-feature-PZS-11087-desired-delivery-day.3
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -383,7 +383,7 @@ definitions:
     properties:
       furtherProcessing:
         $ref: 'FurtherProcessing'
-        description: 'Information for a possible further processing step.'
+        description: "Information for a possible further processing step.\nDEPRECATED: Will be removed, since it is only used for a temporary process at the sorting locations."
       sortingProductName:
         type: string
         description: 'The name of the selected sorting product.'
@@ -412,7 +412,7 @@ definitions:
         maxLength: 200
       desiredDeliveryWeekday:
         $ref: 'Weekday'
-        description: "The desired delivery weekday if any.\nThis is only set when the mailpiece has to be put into storage."
+        description: "The desired delivery weekday if any.\nThis is only set when the mailpiece has to be put into storage.\nDEPRECATED: Will be removed, since it is only used for a temporary process at the sorting locations."
     required:
       - sortingProductName
     additionalProperties: false
