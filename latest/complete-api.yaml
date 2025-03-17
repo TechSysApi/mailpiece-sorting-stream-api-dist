@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 4.4.0
+  version: 4.5.0
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -383,7 +383,7 @@ definitions:
     properties:
       furtherProcessing:
         $ref: 'FurtherProcessing'
-        description: 'Information for a possible further processing step.'
+        description: "Information for a possible further processing step.\nDEPRECATED: Will be removed, since it is only used for a temporary process at the sorting locations."
       sortingProductName:
         type: string
         description: 'The name of the selected sorting product.'
@@ -410,6 +410,9 @@ definitions:
         type: string
         description: "The name of the logistic unit associated to the addressing destination.\nA logistic unit (LogE) defines a meaningful group of addressing destinations from a logistical point of view. This can, for example, include all mail items that are processed by a specific team at the delivery centre."
         maxLength: 200
+      desiredDeliveryWeekday:
+        $ref: 'Weekday'
+        description: "The desired delivery weekday if any.\nThis is only set when the mailpiece has to be put into storage.\nDEPRECATED: Will be removed, since it is only used for a temporary process at the sorting locations."
     required:
       - sortingProductName
     additionalProperties: false
@@ -843,6 +846,17 @@ definitions:
       - sortReason
     additionalProperties: false
     description: 'This message is sent when the sorter discharges the mailpiece or when the mailpiece disappeared. It provides additional information about why and where the item has been discharged.'
+  Weekday:
+    type: string
+    enum:
+      - MONDAY
+      - TUESDAY
+      - WEDNESDAY
+      - THURSDAY
+      - FRIDAY
+      - SATURDAY
+      - SUNDAY
+    description: 'The weekdays.'
   WeightMeasurementState:
     type: object
     properties:
