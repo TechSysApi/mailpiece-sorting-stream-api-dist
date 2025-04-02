@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 4.5.0
+  version: 4.6.0-feature-add-bulk-assisted.1
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -636,7 +636,8 @@ definitions:
       - MANUAL_CODING_BULK_AUTOMATIC
       - MANUAL_PRESORTING
       - MANUAL_SORTING
-    description: "Defines the sorting process.\nAUTOMATIC Sorted by the sorter\nMANUAL_CODING_REJECT Device where a coder manually captures barcodes and enters address information\nMANUAL_CODING_LIGHT Device where barcodes barcodes, products and the weight is captured (manual or partially automated)\nMANUAL_CODING_BULK Device where barcodes, weight and dimensions and address information for bulky goods are captured or entered (manual or partially automated)\nMANUAL_CODING_BULK_AUTOMATIC Device where a coder manually captures barcodes and other specific information for bulky goods\nMANUAL_PRESORTING Device where items are coded automatically and sorted manually to achieve a to achieve a pre-sortation\nMANUAL_SORTING Mailpieces are sorted manually to the correct outlet. Similar to AUTOMATIC, but the mailpiece is transported by a human instead of a sorting unit"
+      - MANUAL_SORTING_BULK_ASSISTED
+    description: "Defines the sorting process.\nAUTOMATIC Sorted by the sorter\nMANUAL_CODING_REJECT Device where a coder manually captures barcodes and enters address information\nMANUAL_CODING_LIGHT Device where barcodes barcodes, products and the weight is captured (manual or partially automated)\nMANUAL_CODING_BULK Device where barcodes, weight and dimensions and address information for bulky goods are captured or entered (manual or partially automated)\nMANUAL_CODING_BULK_AUTOMATIC Device where a coder manually captures barcodes and other specific information for bulky goods\nMANUAL_PRESORTING Device where items are coded automatically and sorted manually to achieve a to achieve a pre-sortation\nMANUAL_SORTING Mailpieces are sorted manually to the correct outlet. Similar to AUTOMATIC, but the mailpiece is transported by a human instead of a sorting unit\nMANUAL_SORTING_BULK_ASSISTED Bulky goods are sorted manually with the help of a special workstation"
   SubmitMailpiece:
     type: object
     properties:
