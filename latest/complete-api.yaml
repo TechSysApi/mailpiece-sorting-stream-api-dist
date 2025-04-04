@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 4.7.0
+  version: 4.8.0-feature-sort-reason-from-previous-sorting.3
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -789,6 +789,9 @@ definitions:
       manualSortingCompletionPossible:
         type: boolean
         description: 'The mailpiece may be sorted manually to a container position. A sorting product could be found given the coded address and no further address or service coding is needed.'
+      sortReasonFromMostRecentSorting:
+        $ref: 'TransmitSortReason'
+        description: 'The sort reason from the last time the mailpiece was sorted, if there was one.'
     required:
       - sortingUnitKey
       - sortingProcess
@@ -798,6 +801,61 @@ definitions:
       - sortplanId
     additionalProperties: false
     description: 'This type contains the result for a mail piece that has been determined by the RC System.'
+  TransmitSortReason:
+    type: string
+    enum:
+      - NO_ADDRESSING_DESTINATION_OR_SORT_REASON
+      - SORTER_DEVICE_ERROR
+      - TOO_MANY_SORTING_LOOPS
+      - RECIPIENT_ORDER
+      - NOT_IN_SORT_PLAN
+      - NO_SORTING_RULE_MATCHED
+      - LOOPING_MAILPIECE
+      - CARGO
+      - CUSTOMS_MISSING_DECLARATION
+      - CUSTOMS_BLOCKED
+      - CUSTOMS_INSPECTION
+      - CUSTOMS_EXTERNAL_INSPECTION
+      - ZALANDO_RED
+      - RECIPIENT_ORDER_FORWARD_ADDRESSEE
+      - RECIPIENT_ORDER_FORWARD_LOCATION
+      - RECIPIENT_ORDER_DELIVERY_DAY
+      - RECIPIENT_ORDER_FORWARD
+      - RECIPIENT_ORDER_SECOND_DELIVERY
+      - RECIPIENT_STANDING_ORDER_FORWARD
+      - RECIPIENT_STANDING_ORDER_FORWARD_PO_BOX
+      - RECIPIENT_STANDING_ORDER_DELAYED_PICKUP
+      - RECIPIENT_STANDING_ORDER_DELAYED_DELIVERY
+      - RECIPIENT_STANDING_ORDER_RETURN
+      - RECIPIENT_STANDING_ORDER_DELIVERY_SLOT
+      - SENDER_ORDER_CHANGE
+      - TRANSFER_FORWARD
+      - TRANSFER_RETURN
+      - TRANSFER
+      - DISTRIBUTION_MONDAY
+      - DISTRIBUTION_TUESDAY
+      - DISTRIBUTION_WEDNESDAY
+      - DISTRIBUTION_THURSDAY
+      - DISTRIBUTION_FRIDAY
+      - DISTRIBUTION_SATURDAY
+      - MULTIPLE_IDENT_CODES
+      - PARCEL_WITHOUT_PARCEL_IDENTIFIER
+      - NOT_IN_DELIVERY_PLAN
+      - NO_SPECIAL_SORT_MAPPING
+      - MILITARY_MAILPIECE
+      - LETTER_LABEL_RETURN
+      - MULTIPLE_LETTER_LABEL_FORWARD
+      - LETTER_EXPRESS
+      - NO_CONTAINER_POSITION_FOR_CONVEYING_AID
+      - LOOPING_MAILPIECE_SAME_CENTER
+      - LOOPING_MAILPIECE_BETWEEN_CENTERS
+      - LOOPING_MAILPIECE_MAXIMUM
+      - MILITARY_POSTCODE_NOT_PLANNED
+      - SENDER_ORDER_INSPECTION
+      - SAMEDAY_EXCEEDED
+      - NO_ADDRESS_AVAILABLE
+      - ENDTIME_EXCEEDED
+    description: "NO_ADDRESSING_DESTINATION_OR_SORT_REASON     No addressing destination or sort reason fround.\r\nSORTER_DEVICE_ERROR                          The sorter device had an error.\r\nTOO_MANY_SORTING_LOOPS                       A mailpiece was processed internally too often.\r\nRECIPIENT_ORDER                              A recipient order was detected.\r\nNOT_IN_SORT_PLAN                             No entry in sort plan could be found for mailpiece.\r\nNO_SORTING_RULE_MATCHED                      No sorting rule applied for mailpiece.\r\nLOOPING_MAILPIECE                            The mailpiece is a looping mailpiece.\r\nCARGO                                        The mailpiece is cargo.\r\nCUSTOMS_MISSING_DECLARATION                  The mailpiece is missing a customs declaration.\r\nCUSTOMS_BLOCKED                              The mailpiece is blocked by customs.\r\nCUSTOMS_INSPECTION                           The mailpiece should be inspected by customs.\r\nCUSTOMS_EXTERNAL_INSPECTION                  The mailpiece should be externally inspected by customs.\r\nZALANDO_RED                                  The mailpiece is Zalando Red.\r\nRECIPIENT_ORDER_FORWARD_ADDRESSEE            The mailpiece will be forwarded to another address.\r\nRECIPIENT_ORDER_FORWARD_LOCATION             The mailpiece will be forwarded to another location.\r\nRECIPIENT_ORDER_DELIVERY_DAY                 The mailpiece will be delivered on a desired day.\r\nRECIPIENT_ORDER_FORWARD                      The mailpiece will be forwarded.\r\nRECIPIENT_ORDER_SECOND_DELIVERY              The mailpiece will be delivered a second time.\r\nRECIPIENT_STANDING_ORDER_FORWARD             The mailpiece will be forwarded.\r\nRECIPIENT_STANDING_ORDER_FORWARD_PO_BOX      The mailpiece will be forwarded to a pobox.\r\nRECIPIENT_STANDING_ORDER_DELAYED_PICKUP      The mailpiece will be withheld and picked up later.\r\nRECIPIENT_STANDING_ORDER_DELAYED_DELIVERY    The mailpiece will be withheld and delivered later.\r\nRECIPIENT_STANDING_ORDER_RETURN              The mailpiece will be returned.\r\nRECIPIENT_STANDING_ORDER_DELIVERY_SLOT       The mailpiece will be delivered at a specific time slot.\r\nSENDER_ORDER_CHANGE\r\nTRANSFER_FORWARD                             A forward transfer case has been detected.\r\nTRANSFER_RETURN                              A return transfer case has been detected.\r\nTRANSFER                                     A transfer case has been detected.\r\nDISTRIBUTION_MONDAY                          The mailpiece will be delivered on monday.\r\nDISTRIBUTION_TUESDAY                         The mailpiece will be delivered on tuesday.\r\nDISTRIBUTION_WEDNESDAY                       The mailpiece will be delivered on wednesday.\r\nDISTRIBUTION_THURSDAY                        The mailpiece will be delivered on thursday.\r\nDISTRIBUTION_FRIDAY                          The mailpiece will be delivered on friday.\r\nDISTRIBUTION_SATURDAY                        The mailpiece will be delivered on saturday.\r\nMULTIPLE_IDENT_CODES                         Multiple ident codes have been detected.\r\nPARCEL_WITHOUT_PARCEL_IDENTIFIER             No ident code has been detected.\r\nNOT_IN_DELIVERY_PLAN                         No entry in delivery plan could be found for mailpiece.\r\nNO_SPECIAL_SORT_MAPPING                      The sort reason could not be mapped to a special sort.\r\nMILITARY_MAILPIECE                           The mailpiece is a military mailpiece.\r\nLETTER_LABEL_RETURN                          A letter return label has been detected.\r\nMULTIPLE_LETTER_LABEL_FORWARD                Multiple letter forward labels have been detected.\r\nLETTER_EXPRESS                               The mailpiece is an express letter.\r\nNO_CONTAINER_POSITION_FOR_CONVEYING_AID      The mailpiece is on a conveying aid and could not be sorted to the intended position because it does not support conveying aids.\r\nLOOPING_MAILPIECE_SAME_CENTER:               Mailpiece has been looping in the current center.\r\nLOOPING_MAILPIECE_BETWEEN_CENTERS:           Mailpiece has been looped between centers.\r\nLOOPING_MAILPIECE_MAXIMUM:                   The Mailpiece was sorted a maximum amount without being sorted to a delivery.\r\nMILITARY_POSTCODE_NOT_PLANNED                The military postcode MLZ (Militärleitzahl) of the mailpiece has no postcode6 assigned, there is no entry in MilitaryBase.\r\nSENDER_ORDER_INSPECTION                      The mailpiece requires inspection - either because of additional custom services or customs checks.\r\nSAMEDAY_EXCEEDED                             The mailpiece is a same day mailpiece and could not be sorted on time for same day delivery.\r\nNO_ADDRESS_AVAILABLE                         The coding system sent the coding result without an address that can be used for sorting.\r\nENDTIME_EXCEEDED                             All matching sorting products have an exceeded clearance time, this is an accepted business case."
   UpdateMailpieceAttributes:
     type: object
     properties:
