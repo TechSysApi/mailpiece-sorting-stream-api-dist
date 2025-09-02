@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 5.0.0
+  version: 5.1.0-feature-add-sort-code-and-specialsort.3
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -491,6 +491,17 @@ definitions:
       - MANUAL
       - AUTOMATIC
     description: "Method of measurement.\r\nMANUAL The values were entered manually\r\nAUTOMATIC The values were measured by an automatic capturing device"
+  MixMailInformation:
+    type: object
+    properties:
+      sortCode:
+        type: string
+        description: "DEPRECATED: Information only use by the MixMail Sortingsystem in MUE, do not use for any other purpose.\nIdentifier of an addressing destination used by the sorting system in MUE."
+      specialSort:
+        type: string
+        description: "DEPRECATED: Information only use by the MixMail Sortingsystem in MUE, do not use for any other purpose.\nSpecial sort set by the sorting control system."
+    additionalProperties: false
+    description: "DEPRECATED: Information only use by the MixMail Sortingsystem in MUE.\nDo not use for any other purpose."
   OutletGroup:
     type: object
     properties:
@@ -789,6 +800,9 @@ definitions:
       manualSortingCompletionPossible:
         type: boolean
         description: 'The mailpiece may be sorted manually to a container position. A sorting product could be found given the coded address and no further address or service coding is needed.'
+      mixMailInformation:
+        $ref: 'MixMailInformation'
+        description: 'DEPRECATED: Information only use by the MixMail Sortingsystem in MUE, do not use for any other purpose.'
     required:
       - sortingUnitKey
       - sortingProcess
@@ -797,7 +811,7 @@ definitions:
       - outletGroup
       - sortplanId
     additionalProperties: false
-    description: 'This type contains the result for a mail piece that has been determined by the RC System.'
+    description: 'This type contains the result for a mailpiece that has been determined by the RC System.'
   UpdateMailpieceAttributes:
     type: object
     properties:
