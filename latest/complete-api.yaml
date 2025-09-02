@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 5.1.0-feature-add-sort-code-and-specialsort.4
+  version: 5.1.0-feature-add-sort-code-and-specialsort.5
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -496,12 +496,12 @@ definitions:
     properties:
       sortCode:
         type: string
-        description: "DEPRECATED: Information only use by the MixMail Sortingsystem in MUE, do not use for any other purpose.\nIdentifier of an addressing destination used by the sorting system in MUE."
+        description: "DEPRECATED: Information only used by the MixMail Sortingsystem in MUE, do not use for any other purpose.\nIdentifier of an addressing destination used by the sorting system in MUE.\nThe sortcode is represented according to:\n| Postcode | Post Code Extension | Code Type | BBZ | SequenceNumber |\n      | 4 | 2 | 1 | 3 | 4 |\n\n      i.e. 17620013610850"
       specialSortKey:
         type: string
-        description: "DEPRECATED: Information only use by the MixMail Sortingsystem in MUE, do not use for any other purpose.\nKey of the special sort set by the sorting control system."
+        description: "DEPRECATED: Information only used by the MixMail Sortingsystem in MUE, do not use for any other purpose.\nKey of the special sort set by the sorting control system."
     additionalProperties: false
-    description: "DEPRECATED: Information only use by the MixMail Sortingsystem in MUE.\nDo not use for any other purpose."
+    description: "DEPRECATED: Information only used by the MixMail Sortingsystem in MUE.\nDo not use for any other purpose."
   OutletGroup:
     type: object
     properties:
@@ -802,7 +802,7 @@ definitions:
         description: 'The mailpiece may be sorted manually to a container position. A sorting product could be found given the coded address and no further address or service coding is needed.'
       mixMailInformation:
         $ref: 'MixMailInformation'
-        description: 'DEPRECATED: Information only use by the MixMail Sortingsystem in MUE, do not use for any other purpose.'
+        description: 'DEPRECATED: Information only used by the MixMail Sortingsystem in MUE, do not use for any other purpose.'
     required:
       - sortingUnitKey
       - sortingProcess
