@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 5.1.0-feature-add-sort-code-and-specialsort.3
+  version: 5.1.0-feature-add-sort-code-and-specialsort.4
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -497,9 +497,9 @@ definitions:
       sortCode:
         type: string
         description: "DEPRECATED: Information only use by the MixMail Sortingsystem in MUE, do not use for any other purpose.\nIdentifier of an addressing destination used by the sorting system in MUE."
-      specialSort:
+      specialSortKey:
         type: string
-        description: "DEPRECATED: Information only use by the MixMail Sortingsystem in MUE, do not use for any other purpose.\nSpecial sort set by the sorting control system."
+        description: "DEPRECATED: Information only use by the MixMail Sortingsystem in MUE, do not use for any other purpose.\nKey of the special sort set by the sorting control system."
     additionalProperties: false
     description: "DEPRECATED: Information only use by the MixMail Sortingsystem in MUE.\nDo not use for any other purpose."
   OutletGroup:
