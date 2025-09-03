@@ -32,3 +32,4 @@
 - [v4.6.0](https://TechSysApi.github.io/mailpiece-sorting-stream-api-dist/v4.6.0/ui/?url=../complete-api.yaml)
 - [v4.7.0](https://TechSysApi.github.io/mailpiece-sorting-stream-api-dist/v4.7.0/ui/?url=../complete-api.yaml)
 - [v5.0.0](https://TechSysApi.github.io/mailpiece-sorting-stream-api-dist/v5.0.0/ui/?url=../complete-api.yaml)
+- [v5.1.0](https://TechSysApi.github.io/mailpiece-sorting-stream-api-dist/v5.1.0/ui/?url=../complete-api.yaml)
