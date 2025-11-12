@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 5.2.0-feature-PZS-11755-sorting-process-no-measurements.1
+  version: 5.2.0-feature-PZS-11755-sorting-process-no-measurements.2
 host: 'server:8080'
 basePath: mqtt
 paths:
