@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 5.1.0
+  version: 5.2.0
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -650,7 +650,8 @@ definitions:
       - MANUAL_PRESORTING
       - MANUAL_SORTING
       - MANUAL_SORTING_BULK_ASSISTED
-    description: "Defines the sorting process.\nAUTOMATIC Sorted by the sorter\nMANUAL_CODING_REJECT Device where a coder manually captures barcodes and enters address information\nMANUAL_CODING_BULK Device where barcodes, weight and dimensions and address information for bulky goods are captured or entered (manual or partially automated)\nMANUAL_PRESORTING Device where items are coded automatically and sorted manually to achieve a to achieve a pre-sortation\nMANUAL_SORTING Mailpieces are sorted manually to the correct outlet. Similar to AUTOMATIC, but the mailpiece is transported by a human instead of a sorting unit\nMANUAL_SORTING_BULK_ASSISTED Bulky goods are sorted manually with the help of a special workstation to capture barcodes, weight, dimensions and address information."
+      - MANUAL_SORTING_BULK_NO_MEASUREMENT
+    description: "Defines the sorting process.\nAUTOMATIC Sorted by the sorter\nMANUAL_CODING_REJECT Device where a coder manually captures barcodes and enters address information\nMANUAL_CODING_BULK Device where barcodes, weight and dimensions and address information for bulky goods are captured or entered (manual or partially automated)\nMANUAL_PRESORTING Device where items are coded automatically and sorted manually to achieve a to achieve a pre-sortation\nMANUAL_SORTING Mailpieces are sorted manually to the correct outlet. Similar to AUTOMATIC, but the mailpiece is transported by a human instead of a sorting unit\nMANUAL_SORTING_BULK_ASSISTED Bulky goods are sorted manually with the help of a special workstation to capture barcodes, weight, dimensions and address information.\nMANUAL_SORTING_BULK_NO_MEASUREMENT Bulky goods are sorted manually without capturing dimensions and weight."
   SubmitMailpiece:
     type: object
     properties:
