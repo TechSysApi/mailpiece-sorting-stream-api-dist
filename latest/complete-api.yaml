@@ -5,7 +5,7 @@ info:
   contact:
     name: 'Swiss Post Sorting System Development'
     email: sortdev@post.ch
-  version: 5.2.0
+  version: 5.3.0-feature-PZS-10767-sort-reason-in-transmit-mailpiece-attributes.1
 host: 'server:8080'
 basePath: mqtt
 paths:
@@ -413,6 +413,9 @@ definitions:
       desiredDeliveryWeekday:
         $ref: 'Weekday'
         description: "The desired delivery weekday if any.\nThis is only set when the mailpiece has to be put into storage.\nDEPRECATED: Will be removed, since it is only used for a temporary process at the sorting locations."
+      sortReasonFromMostRecentSorting:
+        $ref: 'SortReason'
+        description: 'The sort reason from the last time the mailpiece was sorted, if there was one.'
     required:
       - sortingProductName
     additionalProperties: false
